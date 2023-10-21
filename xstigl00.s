@@ -24,8 +24,8 @@ main:
         ; SEM DOPLNTE VASE RESENI
 
 
-        daddi   r4, r0, login   ; vozrovy vypis: adresa login: do r4
-        jal     print_string    ; vypis pomoci print_string - viz nize
+        ; daddi   r4, r0, login   ; vozrovy vypis: adresa login: do r4
+        ; jal     print_string    ; vypis pomoci print_string - viz nize
 
         ; Insert sort
 
@@ -38,19 +38,19 @@ main:
         ; $t0: temporary
         lb $a1, login($zero)
         daddi $s0, $zero, 1
+        daddi $s1, $zero, 1
         beqz $a1, main_end
 
         lb $a1, login($s0)
+        dsub $t1, $zero, $s0
+        daddi $s2, $s0, -1
         beqz $a1, main_end
 main_outer:
-        dsub $t0, $zero, $s0
-        daddi $s1, $s0, 0
-        daddi $s2, $s0, -1
-        daddi $t0, $t0, 3
+        daddi $t1, $t1, 3
         daddi $s0, $s0, 1
-        bgez $t0, main_inner_3_less
-
         daddi $s3, $s1, -2
+        bgez $t1, main_inner_3_less
+
         daddi $s4, $s1, -3
         daddi $s5, $s1, -4
 
@@ -106,10 +106,9 @@ main_inner_3_less:
         daddi $s7, $s2, 0
         beqz $s2, main_inner_end
 
-        daddi $s2, $s1, -1
-
         ; loop 2: $s3 $s2 ($s1)
         lb $a0, login($s3)
+        daddi $s2, $s1, -1
         daddi $s1, $s3, -1
 
         dsub $t0, $a1, $a0
@@ -119,11 +118,9 @@ main_inner_3_less:
         sb $a0, login($s2)
         beqz $s3, main_inner_end
 
-        daddi $s1, $s2, -2
-        daddi $s7, $s1, 0
-
         ; loop 1: $s1 $s3
         lb $a0, login($s1)
+        daddi $s7, $s1, 0
 
         dsub $t0, $a1, $a0
         bgez $t0, main_inner_end
@@ -136,7 +133,10 @@ main_inner_3_less:
 main_inner_end:
         lb $a3, login($s0)
         sb $a1, login($s7)
+        daddi $s1, $s0, 0
         daddi $a1, $a3, 0
+        daddi $s2, $s0, -1
+        dsub $t1, $zero, $s0
         bnez $a3, main_outer
 
 ; outer_end
