@@ -43,10 +43,6 @@ main:
         lb $a1, login($s0)
         beqz $a1, main_end
 main_outer:
-        ; move $a1 to left while it is less than current value
-        ; $a1 is $a1 + 1 so that i can do comparision $a1 >= $a0
-        daddi $a1, $a1, 1
-
         dsub $t0, $zero, $s0
         daddi $s1, $s0, 0
         daddi $s2, $s0, -1
@@ -55,46 +51,49 @@ main_outer:
         bgez $t0, main_inner_3_less
 
         daddi $s3, $s1, -2
+        daddi $s4, $s1, -3
+        daddi $s5, $s1, -4
 
 main_inner_4_more:
         ; $5 $4 $3 $2 $1
         lb $t2, login($s2)
-        daddi $s4, $s1, -3
-        daddi $s5, $s1, -4
 
-        daddi $s7, $s2, 0
+        daddi $s7, $s1, 0
         dsub $t0, $a1, $t2
         lb $t3, login($s3)
         bgez $t0, main_inner_end
 
         sb $t2, login($s1)
-        daddi $s7, $s3, 0
+        daddi $s7, $s2, 0
         dsub $t0, $a1, $t3
         daddi $s1, $s1, -4
         lb $t4, login($s4)
         bgez $t0, main_inner_end
 
         sb $t3, login($s2)
-        daddi $s7, $s4, 0
+        daddi $s7, $s3, 0
         dsub $t0, $a1, $t4
         daddi $s2, $s2, -4
         lb $t5, login($s5)
         bgez $t0, main_inner_end
 
         sb $t4, login($s3)
-        daddi $s7, $s5, 0
+        daddi $s7, $s4, 0
         dsub $t0, $a1, $t5
         daddi $s3, $s3, -4
         bgez $t0, main_inner_end
 
         sb $t5, login($s4)
-        bgez $s4, main_inner_4_more
+        daddi $s5, $s1, -4
+        daddi $s4, $s1, -3
+        bgez $s5, main_inner_4_more
 
         ; unwrapped loop for 3 or less elements
         ; two consecutive iterations are unwrapped into single iteration
         ; first part of the loop is unwrapped
 main_inner_3_less:
         ; loop 3: $s2 $s1
+        daddi $s7, $s1, 0
         beqz $s1, main_inner_end
 
         lb $a0, login($s2)
@@ -136,10 +135,9 @@ main_inner_3_less:
 
 main_inner_end:
         lb $a3, login($s0)
-        daddi $a1, $zero, -1 ; subtract the 1 that was added
         sb $a1, login($s7)
         daddi $a1, $a3, 0
-        beqz $a3, main_outer
+        bnez $a3, main_outer
 
 ; outer_end
 
