@@ -49,11 +49,13 @@ main:
         beqz $a0, main_end ; the length of the string is 1
 main_count: ; loop
         ; compare $a0, and $a1
-        dsub $t0, $a1, $a0
+        dsub $t0, $a0, $a1
         bgez $t0, main_count_no_swap
         ; $a0 = login($s0) is the larger value, set there the smaller
+        daddi $t0, $s0, -1
+        sb $a0, login($t0)
         sb $a1, login($s0)
-        daddi $a1, $a0, 0 ; make $a1 the larger value
+        ; daddi $a1, $a0, 0 ; make $a1 the larger value
         daddi $s1, $s0, 0 ; save the last swap position
 main_count_no_swap:
         daddi $s0, $s0, 1
@@ -64,6 +66,8 @@ main_count_no_swap:
         ; $s0 = index
         ; $s1 = last swap
         ; $s2 = length
+        daddi $t0, $s1, -1
+        beqz $t0, main_end
 main_outer: ; outer bubble sort loop
         daddi $s2, $s1, 0
         daddi $s0, $zero, 1
@@ -76,14 +80,18 @@ main_outer: ; outer bubble sort loop
         lb $a0, login($s0)
 main_inner: ; inner bubble sort loop
         ; comapre $a0 and $a1
-        dsub $t0, $a1, $a0
+        dsub $t0, $a0, $a1
         bgez $t0, main_inner_no_swap
         ; $a0 = login($s0) is the larger value, set there the smaller
+        daddi $t0, $s0, -1
+        sb $a0, login($t0)
         sb $a1, login($s0)
-        daddi $a1, $a0, 0 ; make $a1 the larger value
+        ; daddi $a1, $a0, 0 ; make $a1 the larger value
         daddi $s1, $s0, 0 ; save the last swap position
+        daddi $a0, $a1, 0
 main_inner_no_swap:
         daddi $s0, $s0, 1
+        daddi $a1, $a0, 0
         lb $a0, login($s0)
         bne $s0, $s2, main_inner
 ; main_inner_end:
