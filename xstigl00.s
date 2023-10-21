@@ -27,78 +27,122 @@ main:
         daddi   r4, r0, login   ; vozrovy vypis: adresa login: do r4
         jal     print_string    ; vypis pomoci print_string - viz nize
 
-        ; Bubble sort
+        ; Insert sort
 
-        ; $s0 = index
-        ; $s1 = index of last swap
-        daddi $s1, $zero, 1
-        ; $a0 and $a1 are the chars from the string
-        ; ensure that they are 0 so that it works properly with single byte set
-        daddi $a0, $zero, 0
-        daddi $a1, $zero, 0
-        ; check if the string is empty
+        ; $s0: unsorted index
+        ; $s1 - $s5: indexes
+        ; $s7: result index
+        ; $a0: current element
+        ; $a1: saved element
+        ; $t2 - $t5: elements
+        ; $t0: temporary
         lb $a1, login($zero)
+        daddi $s0, $zero, 1
         beqz $a1, main_end
 
-        ; the first bubble loop
-        ; the first part of the loop is unwrapped so that there are no
-        ; unconditional jumps
-        ; jump in the loop
-        daddi $s0, $zero, 1 ; increase count
-        lb $a0, login($s0)
-        beqz $a0, main_end ; the length of the string is 1
-main_count: ; loop
-        ; compare $a0, and $a1
-        dsub $t0, $a0, $a1
-        bgez $t0, main_count_no_swap
-        ; $a0 = login($s0) is the larger value, set there the smaller
-        daddi $t0, $s0, -1
-        sb $a0, login($t0)
-        sb $a1, login($s0)
-        ; daddi $a1, $a0, 0 ; make $a1 the larger value
-        daddi $s1, $s0, 0 ; save the last swap position
-main_count_no_swap:
+        lb $a1, login($s0)
+        beqz $a1, main_end
+main_outer:
+        ; move $a1 to left while it is less than current value
+        ; $a1 is $a1 + 1 so that i can do comparision $a1 >= $a0
+        daddi $a1, $a1, 1
+
+        dsub $t0, $zero, $s0
+        daddi $s1, $s0, 0
+        daddi $s2, $s0, -1
+        daddi $t0, $t0, 3
         daddi $s0, $s0, 1
-        lb $a0, login($s0)
-        bnez $a0, main_count
-; main_count_end:
+        bgez $t0, main_inner_3_less
 
-        ; $s0 = index
-        ; $s1 = last swap
-        ; $s2 = length
-        daddi $t0, $s1, -1
-        beqz $t0, main_end
-main_outer: ; outer bubble sort loop
-        daddi $s2, $s1, 0
-        daddi $s0, $zero, 1
+        daddi $s3, $s1, -2
 
-        ; inner loop preparation
-        lb $a1, login($zero)
+main_inner_4_more:
+        ; $5 $4 $3 $2 $1
+        lb $t2, login($s2)
+        daddi $s4, $s1, -3
+        daddi $s5, $s1, -4
 
-        ; inner loop half unwrapped
-        daddi $s1, $zero, 1
-        lb $a0, login($s0)
-main_inner: ; inner bubble sort loop
-        ; comapre $a0 and $a1
-        dsub $t0, $a0, $a1
-        bgez $t0, main_inner_no_swap
-        ; $a0 = login($s0) is the larger value, set there the smaller
-        daddi $t0, $s0, -1
-        sb $a0, login($t0)
-        sb $a1, login($s0)
-        ; daddi $a1, $a0, 0 ; make $a1 the larger value
-        daddi $s1, $s0, 0 ; save the last swap position
-        daddi $a0, $a1, 0
-main_inner_no_swap:
-        daddi $s0, $s0, 1
-        daddi $a1, $a0, 0
-        lb $a0, login($s0)
-        bne $s0, $s2, main_inner
-; main_inner_end:
+        daddi $s7, $s2, 0
+        dsub $t0, $a1, $t2
+        lb $t3, login($s3)
+        bgez $t0, main_inner_end
 
-        daddi $t0, $s1, -1
-        bnez $t0, main_outer
-; main_outer_end:
+        sb $t2, login($s1)
+        daddi $s7, $s3, 0
+        dsub $t0, $a1, $t3
+        daddi $s1, $s1, -4
+        lb $t4, login($s4)
+        bgez $t0, main_inner_end
+
+        sb $t3, login($s2)
+        daddi $s7, $s4, 0
+        dsub $t0, $a1, $t4
+        daddi $s2, $s2, -4
+        lb $t5, login($s5)
+        bgez $t0, main_inner_end
+
+        sb $t4, login($s3)
+        daddi $s7, $s5, 0
+        dsub $t0, $a1, $t5
+        daddi $s3, $s3, -4
+        bgez $t0, main_inner_end
+
+        sb $t5, login($s4)
+        bgez $s4, main_inner_4_more
+
+        ; unwrapped loop for 3 or less elements
+        ; two consecutive iterations are unwrapped into single iteration
+        ; first part of the loop is unwrapped
+main_inner_3_less:
+        ; loop 3: $s2 $s1
+        beqz $s1, main_inner_end
+
+        lb $a0, login($s2)
+        daddi $s3, $s2, -1
+
+        dsub $t0, $a1, $a0
+        bgez $t0, main_inner_end
+
+        sb $a0, login($s1)
+        daddi $s7, $s2, 0
+        beqz $s2, main_inner_end
+
+        daddi $s2, $s1, -1
+
+        ; loop 2: $s3 $s2 ($s1)
+        lb $a0, login($s3)
+        daddi $s1, $s3, -1
+
+        dsub $t0, $a1, $a0
+        bgez $t0, main_inner_end
+
+        daddi $s7, $s3, 0
+        sb $a0, login($s2)
+        beqz $s3, main_inner_end
+
+        daddi $s1, $s2, -2
+        daddi $s7, $s1, 0
+
+        ; loop 1: $s1 $s3
+        lb $a0, login($s1)
+
+        dsub $t0, $a1, $a0
+        bgez $t0, main_inner_end
+
+        sb $a0, login($s3)
+
+        ; now i know that this is the first element
+        daddi $s7, $zero, 0
+
+main_inner_end:
+        lb $a3, login($s0)
+        daddi $a1, $zero, -1 ; subtract the 1 that was added
+        sb $a1, login($s7)
+        daddi $a1, $a3, 0
+        beqz $a3, main_outer
+
+; outer_end
+
 
 main_end:
         daddi   r4, r0, login   ; vozrovy vypis: adresa login: do r4
