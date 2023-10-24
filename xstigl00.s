@@ -117,36 +117,40 @@ main_inner_3_less:
 
         ; loop 2: $s3 $s2 ($s1)
         lb $a0, login($s3)
-        daddi $s2, $s1, -1
-        daddi $s1, $s3, -1
+        daddi $s4, $s1, -1
+        daddi $s5, $s3, -1
 
         dsub $t0, $a1, $a0
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;
-        bgez $t0, main_inner_end
+        daddi $s1, $s0, 0
+        daddi $s2, $s0, -1
+        bgez $t0, main_inner_end_s12
 
         sb $a1, login($s3)
-        sb $a0, login($s2)
-        beqz $s3, main_inner_end
+        sb $a0, login($s4)
+        beqz $s3, main_inner_end_s12
 
         ; loop 1: $s1 $s3
-        lb $a0, login($s1)
-        sb $a1, login($s1)
+        lb $a0, login($s5)
+        sb $a1, login($s5)
 
         ;;;;;;;;;;;;;;;;;;;;;;;;;;
         dsub $t0, $a1, $a0
         ;;;;;;;;;;;;;;;;;;;;;;;;;;
         ;;;;;;;;;;;;;;;;;;;;;;;;;;
-        bgez $t0, main_inner_end
+        bgez $t0, main_inner_end_s12
 
         sb $a0, login($s3)
 
         ; now i know that this is the first element
         sb $a1, login($zero)
+
+        daddi $a1, $a3, 0
+        bnez $a3, main_outer
 main_inner_end:
         daddi $s1, $s0, 0
-        daddi $a1, $a3, 0
         daddi $s2, $s0, -1
+main_inner_end_s12:
+        daddi $a1, $a3, 0
         bnez $a3, main_outer
 
 ; outer_end
