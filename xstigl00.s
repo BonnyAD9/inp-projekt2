@@ -99,8 +99,6 @@ main_inner_4_more:
         ; first part of the loop is unwrapped
 main_inner_3_less:
         ; loop 3: $s2 $s1
-        sb $a1, login($s1)
-        beqz $s1, main_inner_end
 
         lb $a0, login($s2)
         daddi $s3, $s2, -1
