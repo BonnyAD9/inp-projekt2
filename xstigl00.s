@@ -31,7 +31,7 @@ main:
 
         daddi $s0, $zero, 1
         lb $a0, login($zero)
-        ;;;;;;;;;;;;;;;;;;;;;;
+        daddi $v1, $zero, 1
         ;;;;;;;;;;;;;;;;;;;;;;
         beqz $a0, main_end
 
@@ -42,30 +42,29 @@ main:
 outer:
         lb $a1, login($s2)
         daddi $s0, $s0, 1
+        daddi $s2, $s2, -1
+        dsub $t0, $a0, $a1
 
         ; s2, --, s1
 inner:
-        daddi $s2, $s2, -1
-        dsub $t0, $a0, $a1
-        ;;;;;;;;;;;;;;;;;;;;;;
-        ;;;;;;;;;;;;;;;;;;;;;;
-
         bgez $t0, inner_end
+        ;;;;;;;;;;;;;;;;;;;;;;
         lb $a2, login($s2)
         sb $a1, login($s1)
         daddi $s1, $s1, -1
-        beqz $s2, last_inner
-
-        daddi $s2, $s2, -1
         dsub $t0, $a0, $a2
-        ;;;;;;;;;;;;;;;;;;;;;;
-        ;;;;;;;;;;;;;;;;;;;;;;
+        daddi $s2, $s2, -1
+        beq $s1, $v1, last_inner
+
 
         bgez $t0, inner_end
+        ;;;;;;;;;;;;;;;;;;;;;;
         lb $a1, login($s2)
         sb $a2, login($s1)
         daddi $s1, $s1, -1
-        bnez $s2, inner
+        dsub $t0, $a0, $a1
+        daddi $s2, $s2, -1
+        bne $s1, $v1, inner
 last_inner:
         lb $a1, login($zero)
         ;;;;;;;;;;;;;;;;;;;;;;
