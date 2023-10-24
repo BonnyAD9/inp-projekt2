@@ -32,11 +32,12 @@ main:
         daddi $s0, $zero, 1
         lb $a0, login($zero)
         daddi $v1, $zero, 1
-        ;;;;;;;;;;;;;;;;;;;;;;
+        ; nop
         beqz $a0, main_end
 
         lb $a0, login($s0)
         daddi $s0, $s0, 1
+        ; nop
         beqz $a0, main_end
         j last_inner
 outer:
@@ -46,6 +47,8 @@ outer:
         dsub $t0, $a0, $a1
 
         ; s2, --, s1
+        ; nop
+        ; nop
 inner:
         bgez $t0, inner_end
         lb $a2, login($s2)
@@ -68,15 +71,14 @@ last_inner:
         sb $a0, login($v1)
         daddi $a2, $a0, 0
         lb $a0, login($s0)
-        ;;;;;;;;;;;;;;;;;;;;;;
+        ; nop
         dsub $t0, $a2, $a1
         daddi $s1, $s0, 0
         daddi $s2, $s0, -1
         bgez $t0, inner_end2
-        sb $a1, login($v1)
 
+        sb $a1, login($v1)
         sb $a2, login($zero)
-        bnez $a0, outer
 inner_end2:
         bnez $a0, outer
 inner_end:
@@ -97,5 +99,7 @@ main_end:
 print_string:   ; adresa retezce se ocekava v r4
                 sw      r4, params_sys5(r0)
                 daddi   r14, r0, params_sys5    ; adr pro syscall 5 musi do r14
+                ; nop
+                ; nop
                 syscall 5   ; systemova procedura - vypis retezce na terminal
                 jr      r31 ; return - r31 je urcen na return address
