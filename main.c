@@ -5,8 +5,8 @@ int main(void) {
     char login[] = "vitejte-v-inp-2023\0";
     printf("%s\n", login);
 
-    int s0, s1, s2, s3, s4, s5, s7, t0, zero = 0; // registers
-    char a0, a1, a3, t2, t3, t4, t5;
+    int s0, s1, s2, s3, s4, s5, t0, a2, t1, t2, zero = 0; // registers
+    char a0, a1, v0;
     // many spaces to align the line numbers with the other file
 
 
@@ -27,119 +27,89 @@ int main(void) {
 
 
 
-                                            // ; Insert sort
+        // ; Insert sort
 
-                                            // ; $s0: unsorted index
-                                            // ; $s1 - $s5: indexes
-                                            // ; $s7: result index
-                                            // ; $a0: current element
-                                            // ; $a1: saved element
-                                            // ; $t2 - $t5: elements
-                                            // ; $t0 - t1: temporary
-        a1 = login[zero];                   // lb $a1, login($zero)
-        s0 = zero + 1;                      // daddi $s0, $zero, 1
-        if (a1 == 0) goto main_end;         // beqz $a1, main_end
+        // ; $a0: current value
+        // ; $s0: first unsorted
+        // ; $s1, $s2: inner_4_more index
+        // ; $s3, $s4: inner_3_less index
+        // ; $s5: result index
+        // ; $t0: temporary
+        // ; $v0: 8
+        a0 = login[zero]; // lb $a0, login($zero)
+        s0 = zero + 1; // daddi $s0, $zero, 1
+        t1 = zero + -2; // daddi $t1, $zero, -2
+        if (a0 == 0) goto main_end; // beqz $a0, main_end
 
-        a1 = login[s0];                     // lb $a1, login($s0)
-        if (a1 == 0) goto main_end;         // beqz $a1, main_end
-main_outer:
-        t0 = zero - s0;                     // dsub $t0, $zero, $s0
-        s1 = s0 + 0;                        // daddi $s1, $s0, 0
-        s2 = s0 - 1;                        // daddi $s2, $s0, -1
-        t0 = t0 + 3;                        // daddi $t0, $t0, 3
-        s0 = s0 + 1;                        // daddi $s0, $s0, 1
-        if (t0 >= 0) goto main_inner_3_less; // bgez $t0, main_inner_3_less
+outer:
+        s4 = s0 + 1; // daddi $s4, $s0, 1
+        t1 = zero - t1; // dsub $t1, $zero, $t1
+        s3 = s0 + -1; // daddi $s3, $s0, -1
+        s0 = s0 + 1; // daddi $s0, $s0, 1
+        // ; $s1 $s2 --- $s3 $s4
+        // ;                 $s0
+        // ; $a0 = login1[$s0]
+        // ; $a1 = login1[$s1]
+        // ; $a2 = login4[$s1]
 
-        s3 = s1 + -2;                        // daddi $s3, $s1, -2
-        s4 = s1 + -3;                       // daddi $s4, $s1, -3
-        s5 = s1 + -4;                       // daddi $s5, $s1, -4
+        // ; t0 = s4 & 0x7; // andi $t0, $s4, 0x7
+        // ; if (t0 == 0) goto inner_4_uneaven; // beqz $t0, inner_4_uneaven
 
-main_inner_4_more:                  // main_inner_4_more:
-                                            // ; $5 $4 $3 $2 $1
-        t2 = login[s2];                     // lb $t2, login($s2)
+inner_3_less:
+        s4 = s4 + -1; // daddi $s4, $s4, -1
 
-        s7 = s1 + 0;                        // daddi $s7, $s1, 0
-        t0 = a1 - t2;                       // dsub $t0, $a1, $t2
-        t3 = login[s3];                     // lb $t3, login($s3)
-        if (t0 >= 0) goto main_inner_end;    // bgez $t0, main_inner_end
+        a1 = login[s3]; // lb $a1, login($s3)
+        ;;;;;;;;;;;;;;;;;;;;;
+        t2 = s4 & 0x3; // andi $t2, $s4, 0x3
+        t0 = a0 - a1; // dsub $t0, $a0, $a1
+        login[s4] = a1; // sb $a1, login($s4)
+        s1 = s4 + -4; // daddi $s1, $s4, -4
+        ;;;;;;;;;;;;;;;;;;;;;
+        if (t0 >= 0) goto inner_end; // bgez $t0, inner_end
 
-        login[s1] = t2;                     // sb $t2, login($s1)
-        s7 = s2 + 0;                        // daddi $s7, $s2, 0
-        t0 = a1 - t3;                       // dsub $t0, $a1, $t3
-        s1 = s1 + -4;                       // daddi $s1, $s1, -4
-        t4 = login[s4];                     // lb $t4, login($s4)
-        if (t0 >= 0) goto main_inner_end;    // bgez $t0, main_inner_end
+        if (t2 != 0) goto inner_3_less; // bnez $t2, inner_3_less
 
-        login[s2] = t3;                     // sb $t3, login($s2)
-        s7 = s3 + 0;                        // daddi $s7, $s3, 0
-        t0 = a1 - t4;                       // dsub $t0, $a1, $t4
-        s2 = s2 + -4;                       // daddi $s2, $s2, -4
-        t5 = login[s5];                     // lb $t5, login($s5)
-        if (t0 >= 0) goto main_inner_end;    // bgez $t0, main_inner_end
+        if (s4 == 0) goto inner_end; // beqz $s4, inner_end
 
-        login[s3] = t4;                     // sb $t4, login($s3)
-        s7 = s4 + 0;                        // daddi $s7, $s4, 0
-        t0 = a1 - t5;                       // dsub $t0, $a1, $t5
-        s3 = s3 + -4;                       // daddi $s3, $s3, -4
-        if (t0 >= 0) goto main_inner_end;    // bgez $t0, main_inner_end
+inner_4_more:
+        a1 = login[s1]; // lb $a1, login($s1)
+        ;;;;;;;;;;;;;;;;;;;;;
+        ;;;;;;;;;;;;;;;;;;;;;
+        t0 = a0 - a1; // dsub $t0, $a0, $a1
+        if (s4 == 0) goto inner_end; // beqz $s4, inner_end
+        s3 = s4 + -1; // daddi $s3, $s4, -1
+        if (t0 >= 0) goto inner_3_less; // bgez $t0, inner_3_less
 
-        login[s4] = t5;                     // sb $t5, login($s4)
-        s5 = s1 + -4;                       // daddi $s5, $s1, -4
-        s4 = s1 + -3;                       // daddi $s4, $s1, -3
-        if (s5 >= 0) goto main_inner_4_more; // bgez $s4, main_inner_4_more
+        a2 = *(int *)(login + s1); // lw $a2, login($s1)
+        ;;;;;;;;;;;;;;;;;;;;;
+        ;;;;;;;;;;;;;;;;;;;;;
+        t0 = a2 << 8; // dsll $t0, $a2, 8
+        ;;;;;;;;;;;;;;;;;;;;;
+        ;;;;;;;;;;;;;;;;;;;;;
+        *(int *)(login + s1) = t0; // sw $t0, login($s1)
+        ;;;;;;;;;;;;;;;;;;;;;
+        ;;;;;;;;;;;;;;;;;;;;;
+        t0 = a2 >> 24; // dsrl $t0, $a2, 24
+        s1 = s1 + -4; // daddi $s1, $s1, -4
+        ;;;;;;;;;;;;;;;;;;;;;
+        login[s4] = t0; // sb $t0, login($s4)
 
-                                            // ; unwrapped loop for 3 or less elements
-                                            // ; two consecutive iterations are unwrapped into single iteration
-                                            // ; first part of the loop is unwrapped
-main_inner_3_less:                  // main_inner_3_less:
-                                            // ; loop 3: $s2 $s1
-        s7 = s1 + 0;                        // daddi $s7, $s1, 0
-        if (s1 == 0) goto main_inner_end;   // beqz $s1, main_inner_end
+        s4 = s4 + -4; // daddi $s4, $s4, -4
+        if (s1 >= 0) goto inner_4_more; // bgez $s1, inner_4_more
 
-        a0 = login[s2];                     // lb $a0, login($s2)
-        s3 = s2 + -1;                       // daddi $s3, $s2, -1
+        ;;;;;;;;;;;;;;;;;;;;;
+        login[s4] = a0; // sb $a0, login($s4)
+        a0 = login[s0]; // lb $a0, login($s0)
+        t1 = s0 + -3; // daddi $t1, $s0, -3
+        ;;;;;;;;;;;;;;;;;;;;;
+        if (a0 != 0) goto outer; // bnez $a0, outer
 
-        t0 = a1 - a0;                       // dsub $t0, $a1, $a0
-        if (t0 >= 0) goto main_inner_end;    // bgez $t0, main_inner_end
-
-        login[s1] = a0;                     // sb $a0, login($s1)
-        s7 = s2 + 0;                        // daddi $s7, $s2, 0
-        if (s2 == 0) goto main_inner_end;   // beqz $s2, main_inner_end
-
-        s2 = s1 + -1;                       // daddi $s2, $s1, -1
-
-                                            // ; loop 2: $s3 $s2 ($s1)
-        a0 = login[s3];                     // lb $a0, login($s3)
-        s1 = s3 + -1;                       // daddi $s1, $s3, -1
-
-        t0 = a1 - a0;                       // dsub $t0, $a1, $a0
-        if (t0 >= 0) goto main_inner_end;   // bgez $t0, main_inner_end
-
-        s7 = s3 + 0;                        // daddi $s7, $s3, 0
-        login[s2] = a0;                     // sb $a0, login($s2)
-        if (s3 == 0) goto main_inner_end;   // beqz $s3, main_inner_end
-
-        s1 = s2 + -2;                       // daddi $s1, $s2, -2
-        s7 = s1 + 0;                        // daddi $s7, $s1, 0
-
-                                            // ; loop 1: $s1 $s3
-        a0 = login[s1];                     // lb $a0, login($s1)
-
-        t0 = a1 - a0;                       // dsub $t0, $a1, $a0
-        if (t0 >= 0) goto main_inner_end;    // bgez $t0, main_inner_end
-
-        login[s3] = a0;                     // sb $a0, login($s3)
-
-                                            // ; now i know that this is the first element
-        s7 = zero + 0;                      // daddi $s7, $zero, 0
-
-main_inner_end:                     // main_inner_end:
-        a3 = login[s0];                     // lb $a3, login($s0)
-        login[s7] = a1;                     // sb $a1, login($s7)
-        a1 = a3 + 0;                        // daddi $a1, $a3, 0
-        if (a3 != 0) goto main_outer;       // bnez $a3, main_outer
-
-// ; outer_end
+inner_end:
+        login[s4] = a0; // sb $a0, login($s4)
+        a0 = login[s0]; // lb $a0, login($s0)
+        t1 = s0 + -3; // daddi $t1, $s0, -3
+        ;;;;;;;;;;;;;;;;;;;;;
+        if (a0 != 0) goto outer; // bnez $a0, outer
 
 main_end:
         printf("%s\n", login);

@@ -14,6 +14,7 @@ login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
 ; login:          .asciiz "xlogin00"            ; SEM DOPLNTE VLASTNI LOGIN
                                                 ; A POUZE S TIMTO ODEVZDEJTE
 
+test_print: .asciiz "test\n"
 params_sys5:    .space  8   ; misto pro ulozeni adresy pocatku
                             ; retezce pro vypis pomoci syscall 5
                             ; (viz nize - "funkce" print_string)
@@ -29,118 +30,101 @@ main:
 
         ; Insert sort
 
-        ; $s0: unsorted index
-        ; $s1 - $s5: indexes
-        ; $s7: result index
-        ; $a0: current element
-        ; $a1: saved element
-        ; $t2 - $t5: elements
+        ; $a0: current value
+        ; $s0: first unsorted
+        ; $s1, $s2: inner_4_more index
+        ; $s3, $s4: inner_3_less index
+        ; $s5: result index
         ; $t0: temporary
-        lb $a1, login($zero)
+        ; $v0: 8
+        lb $a0, login($zero)
         daddi $s0, $zero, 1
-        daddi $s1, $zero, 1
-        beqz $a1, main_end
+        ;;;;;;;;;;;;;;;;;;;;;
+        beqz $a0, main_end
 
-        lb $a1, login($s0)
-        dsub $t1, $zero, $s0
-        daddi $s2, $s0, -1
-        beqz $a1, main_end
-main_outer:
-        daddi $t1, $t1, 3
+outer:
+        daddi $s4, $s0, 0
+        dsub $t1, $zero, $t1
+        daddi $s3, $s0, -1
         daddi $s0, $s0, 1
-        daddi $s3, $s1, -2
-        bgez $t1, main_inner_3_less
+        bgez $t1, inner_3_less
+        ; $s1 $s2 --- $s3 $s4
+        ;                 $s0
+        ; $a0 = login1[$s0]
+        ; $a1 = login1[$s1]
+        ; $a2 = login4[$s1]
 
-        daddi $s4, $s1, -3
-        daddi $s5, $s1, -4
+        ; andi $t0, $s4, 0x7
+        ; beqz $t0, inner_4_uneaven
 
-main_inner_4_more:
-        ; $5 $4 $3 $2 $1
-        lb $t2, login($s2)
+inner_4_uneaven:
+        lb $a1, login($s3)
+        andi $t2, $s4, 0x3
+        dsub $t0, $a0, $a1
+        sb $a1, login($s4)
+        daddi $s1, $s4, -4
+        ;;;;;;;;;;;;;;;;;;;;;
+        bgez $t0, inner_end
 
-        daddi $s7, $s1, 0
-        dsub $t0, $a1, $t2
-        lb $t3, login($s3)
-        bgez $t0, main_inner_end
+        beqz $t2, inner_4_more
 
-        sb $t2, login($s1)
-        daddi $s7, $s2, 0
-        dsub $t0, $a1, $t3
+        daddi $s4, $s4, -1
+        daddi $s3, $s3, -1
+        ;;;;;;;;;;;;;;;;;;;;;
+        bnez $s4, inner_4_uneaven
+
+inner_4_more:
+        lb $a1, login($s1)
+        ;;;;;;;;;;;;;;;;;;;;;
+        ;;;;;;;;;;;;;;;;;;;;;
+        dsub $t0, $a0, $a1
+        beqz $s4, inner_end
+        daddi $s3, $s4, -1
+        bgez $t0, inner_3_less
+
+        lw $a2, login($s1)
+        ;;;;;;;;;;;;;;;;;;;;;
+        ;;;;;;;;;;;;;;;;;;;;;
+        dsll $t0, $a2, 8
+        ;;;;;;;;;;;;;;;;;;;;;
+        ;;;;;;;;;;;;;;;;;;;;;
+        sw $t0, login($s1)
+        ;;;;;;;;;;;;;;;;;;;;;
+        ;;;;;;;;;;;;;;;;;;;;;
+        dsrl $t0, $a2, 24
         daddi $s1, $s1, -4
-        lb $t4, login($s4)
-        bgez $t0, main_inner_end
+        ;;;;;;;;;;;;;;;;;;;;;
+        sb $t0, login($s4)
 
-        sb $t3, login($s2)
-        daddi $s7, $s3, 0
-        dsub $t0, $a1, $t4
-        daddi $s2, $s2, -4
-        lb $t5, login($s5)
-        bgez $t0, main_inner_end
+        daddi $s4, $s4, -4
+        bgez $s1, inner_4_more
 
-        sb $t4, login($s3)
-        daddi $s7, $s4, 0
-        dsub $t0, $a1, $t5
-        daddi $s3, $s3, -4
-        bgez $t0, main_inner_end
+        ;;;;;;;;;;;;;;;;;;;;;
+        sb $a0, login($s4)
+        lb $a0, login($s0)
+        daddi $t1, $s0, -3
+        ;;;;;;;;;;;;;;;;;;;;;
+        bnez $a0, outer
 
-        sb $t5, login($s4)
-        daddi $s5, $s1, -4
-        daddi $s4, $s1, -3
-        bgez $s5, main_inner_4_more
+inner_3_less:
+        lb $a1, login($s3)
+        ;;;;;;;;;;;;;;;;;;;;;
+        ;;;;;;;;;;;;;;;;;;;;;
+        dsub $t0, $a0, $a1
+        sb $a1, login($s4)
+        ;;;;;;;;;;;;;;;;;;;;;
+        bgez $t0, inner_end
 
-        ; unwrapped loop for 3 or less elements
-        ; two consecutive iterations are unwrapped into single iteration
-        ; first part of the loop is unwrapped
-main_inner_3_less:
-        ; loop 3: $s2 $s1
-        daddi $s7, $s1, 0
-        beqz $s1, main_inner_end
-
-        lb $a0, login($s2)
-        daddi $s3, $s2, -1
-
-        dsub $t0, $a1, $a0
-        bgez $t0, main_inner_end
-
-        sb $a0, login($s1)
-        daddi $s7, $s2, 0
-        beqz $s2, main_inner_end
-
-        ; loop 2: $s3 $s2 ($s1)
-        lb $a0, login($s3)
-        daddi $s2, $s1, -1
-        daddi $s1, $s3, -1
-
-        dsub $t0, $a1, $a0
-        bgez $t0, main_inner_end
-
-        daddi $s7, $s3, 0
-        sb $a0, login($s2)
-        beqz $s3, main_inner_end
-
-        ; loop 1: $s1 $s3
-        lb $a0, login($s1)
-        daddi $s7, $s1, 0
-
-        dsub $t0, $a1, $a0
-        bgez $t0, main_inner_end
-
-        sb $a0, login($s3)
-
-        ; now i know that this is the first element
-        daddi $s7, $zero, 0
-
-main_inner_end:
-        lb $a3, login($s0)
-        sb $a1, login($s7)
-        daddi $s1, $s0, 0
-        daddi $a1, $a3, 0
-        daddi $s2, $s0, -1
-        dsub $t1, $zero, $s0
-        bnez $a3, main_outer
-
-; outer_end
-
+        daddi $s4, $s4, -1
+        daddi $s3, $s3, -1
+        ;;;;;;;;;;;;;;;;;;;;;
+        bnez $s4, inner_3_less
+inner_end:
+        sb $a0, login($s4)
+        lb $a0, login($s0)
+        daddi $t1, $s0, -3
+        ;;;;;;;;;;;;;;;;;;;;;
+        bnez $a0, outer
 
 main_end:
         daddi   r4, r0, login   ; vozrovy vypis: adresa login: do r4
