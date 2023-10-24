@@ -74,7 +74,7 @@ last_inner:
         daddi $s1, $zero, 1
         ;;;;;;;;;;;;;;;;;;;;;;
         bgez $t0, inner_end
-        sb $a1, login($s2)
+        sb $a1, login($s1)
 
         sb $a0, login($zero)
         lb $a0, login($s0)
