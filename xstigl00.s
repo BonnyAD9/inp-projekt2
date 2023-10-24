@@ -70,12 +70,18 @@ last_inner:
         ;;;;;;;;;;;;;;;;;;;;;;
         ;;;;;;;;;;;;;;;;;;;;;;
         dsub $t0, $a0, $a1
-        daddi $s1, $zero, 1
+        daddi $s3, $zero, 1
         ;;;;;;;;;;;;;;;;;;;;;;
-        bgez $t0, inner_end
-        sb $a1, login($s1)
+        bgez $t0, inner_end2
+        sb $a1, login($s3)
 
         sb $a0, login($zero)
+        lb $a0, login($s0)
+        daddi $s1, $s0, 0
+        daddi $s2, $s0, -1
+        bnez $a0, outer
+inner_end2:
+        sb $a0, login($s3)
         lb $a0, login($s0)
         daddi $s1, $s0, 0
         daddi $s2, $s0, -1
