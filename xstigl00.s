@@ -59,8 +59,10 @@ main_inner_4_more:
         lb $t2, login($s2)
 
         daddi $s7, $s1, 0
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;
         dsub $t0, $a1, $t2
         lb $t3, login($s3)
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;
         bgez $t0, main_inner_end
 
         sb $t2, login($s1)
@@ -78,14 +80,15 @@ main_inner_4_more:
         bgez $t0, main_inner_end
 
         sb $t4, login($s3)
-        daddi $s7, $s4, 0
         dsub $t0, $a1, $t5
+        daddi $s7, $s4, 0
         daddi $s3, $s3, -4
         bgez $t0, main_inner_end
 
         sb $t5, login($s4)
         daddi $s5, $s1, -4
         daddi $s4, $s1, -3
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;
         bgez $s5, main_inner_4_more
 
         ; unwrapped loop for 3 or less elements
@@ -99,7 +102,10 @@ main_inner_3_less:
         lb $a0, login($s2)
         daddi $s3, $s2, -1
 
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;
         dsub $t0, $a1, $a0
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;
         bgez $t0, main_inner_end
 
         sb $a0, login($s1)
@@ -112,6 +118,8 @@ main_inner_3_less:
         daddi $s1, $s3, -1
 
         dsub $t0, $a1, $a0
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;
         bgez $t0, main_inner_end
 
         daddi $s7, $s3, 0
@@ -122,7 +130,10 @@ main_inner_3_less:
         lb $a0, login($s1)
         daddi $s7, $s1, 0
 
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;
         dsub $t0, $a1, $a0
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;
         bgez $t0, main_inner_end
 
         sb $a0, login($s3)
@@ -134,6 +145,7 @@ main_inner_end:
         lb $a3, login($s0)
         sb $a1, login($s7)
         daddi $s1, $s0, 0
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;
         daddi $a1, $a3, 0
         daddi $s2, $s0, -1
         dsub $t1, $zero, $s0
