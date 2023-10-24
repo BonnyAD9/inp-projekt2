@@ -29,129 +29,30 @@ main:
 
         ; Insert sort
 
-        ; $s0: unsorted index
-        ; $s1 - $s5: indexes
-        ; $s7: result index
-        ; $a0: current element
-        ; $a1: saved element
-        ; $t2 - $t5: elements
-        ; $t0: temporary
-        lb $a1, login($zero)
         daddi $s0, $zero, 1
-        daddi $s1, $zero, 1
-        beqz $a1, main_end
-
-        lb $a1, login($s0)
-        dsub $t1, $zero, $s0
+        lb $a0, login($zero)
+        beqz $a0, main_end
+        lb $a0, login($s0)
+        beqz $a0, main_end
+outer:
+        daddi $s1, $s0, 0
         daddi $s2, $s0, -1
-        lb $a3, login($s0)
-        beqz $a1, main_end
-main_outer:
-        daddi $t1, $t1, 3
+        lb $a0, login($s0)
         daddi $s0, $s0, 1
-        daddi $s3, $s1, -2
-        bgez $t1, main_inner_3_less
 
-        daddi $s4, $s1, -3
-        daddi $s5, $s1, -4
-
-main_inner_4_more:
-        ; $5 $4 $3 $2 $1
-        lb $t2, login($s2)
-
+        ; s2, s1
+inner:
+        lb $a1, login($s2)
+        dsub $t0, $a0, $a1
+        bgez $t0, inner_end
         sb $a1, login($s1)
-        lb $a3, login($s0)
-        dsub $t0, $a1, $t2
-        lb $t3, login($s3)
-        dsub $t1, $zero, $s0
-        bgez $t0, main_inner_end
-
-        sb $t2, login($s1)
-        sb $a1, login($s2)
-        dsub $t0, $a1, $t3
-        daddi $s1, $s1, -4
-        lb $t4, login($s4)
-        bgez $t0, main_inner_end
-
-        sb $t3, login($s2)
-        sb $a1, login($s3)
-        dsub $t0, $a1, $t4
-        daddi $s2, $s2, -4
-        lb $t5, login($s5)
-        bgez $t0, main_inner_end
-
-        sb $t4, login($s3)
-        dsub $t0, $a1, $t5
-        sb $a1, login($s4)
-        daddi $s3, $s3, -4
-        bgez $t0, main_inner_end
-
-        sb $t5, login($s4)
-        daddi $s5, $s1, -4
-        daddi $s4, $s1, -3
-
-        sb $a1, login($s1)
-        bgez $s5, main_inner_4_more
-
-        dsub $t1, $zero, $s0
-        beqz $s1, main_inner_end
-
-        ; unwrapped loop for 3 or less elements
-        ; two consecutive iterations are unwrapped into single iteration
-        ; first part of the loop is unwrapped
-main_inner_3_less:
-        ; loop 3: $s2 $s1
-
-        lb $a0, login($s2)
-        daddi $s3, $s2, -1
-
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;
-        dsub $t0, $a1, $a0
-        lb $a3, login($s0)
-        dsub $t1, $zero, $s0
-        bgez $t0, main_inner_end
-
+        daddi $s2, $s2, -1
+        daddi $s1, $s1, -1
+        bgez $s2, inner
+inner_end:
         sb $a0, login($s1)
-        sb $a1, login($s2)
-        beqz $s2, main_inner_end
-
-        ; loop 2: $s3 $s2 ($s1)
-        lb $a0, login($s3)
-        daddi $s4, $s1, -1
-        daddi $s5, $s3, -1
-
-        dsub $t0, $a1, $a0
-        daddi $s1, $s0, 0
-        daddi $s2, $s0, -1
-        bgez $t0, main_inner_end_s12
-
-        sb $a1, login($s3)
-        sb $a0, login($s4)
-        beqz $s3, main_inner_end_s12
-
-        ; loop 1: $s1 $s3
-        lb $a0, login($s5)
-        sb $a1, login($s5)
-
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;
-        dsub $t0, $a1, $a0
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;
-        bgez $t0, main_inner_end_s12
-
-        sb $a0, login($s3)
-
-        ; now i know that this is the first element
-        sb $a1, login($zero)
-
-        daddi $a1, $a3, 0
-        bnez $a3, main_outer
-main_inner_end:
-        daddi $s1, $s0, 0
-        daddi $s2, $s0, -1
-main_inner_end_s12:
-        daddi $a1, $a3, 0
-        bnez $a3, main_outer
+        lb $a0, login($s0)
+        bnez $a0, outer
 
 ; outer_end
 
