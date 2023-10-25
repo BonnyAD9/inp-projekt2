@@ -30,16 +30,15 @@ main:
         ; Insert sort
 
         daddi $s0, $zero, 1
-        lb $a0, login($zero)
+        lb $a1, login($zero)
         daddi $v1, $zero, 1
-        ; nop
-        beqz $a0, main_end
-
         lb $a0, login($s0)
+        beqz $a1, main_end
+
         daddi $s0, $s0, 1
         ; nop
         beqz $a0, main_end
-        j last_inner
+        j last_inner1
 outer:
         lb $a1, login($s2)
         daddi $s0, $s0, 1
@@ -56,8 +55,7 @@ inner:
         daddi $s1, $s1, -1
         dsub $t0, $a0, $a2
         daddi $s2, $s2, -1
-        beq $s1, $v1, last_inner
-
+        beq $s1, $v1, last_inner2
 
         bgez $t0, inner_end
         lb $a1, login($s2)
@@ -66,19 +64,31 @@ inner:
         dsub $t0, $a0, $a1
         daddi $s2, $s2, -1
         bne $s1, $v1, inner
-last_inner:
-        lb $a1, login($zero)
+last_inner1:
         sb $a0, login($v1)
-        daddi $a2, $a0, 0
+        daddi $a3, $a0, 0
         lb $a0, login($s0)
         ; nop
-        dsub $t0, $a2, $a1
+        dsub $t0, $a3, $a1
         daddi $s1, $s0, 0
         daddi $s2, $s0, -1
         bgez $t0, inner_end2
 
         sb $a1, login($v1)
-        sb $a2, login($zero)
+        sb $a3, login($zero)
+        bnez $a0, outer
+last_inner2:
+        sb $a0, login($v1)
+        daddi $a3, $a0, 0
+        lb $a0, login($s0)
+        ; nop
+        dsub $t0, $a3, $a2
+        daddi $s1, $s0, 0
+        daddi $s2, $s0, -1
+        bgez $t0, inner_end2
+
+        sb $a2, login($v1)
+        sb $a3, login($zero)
 inner_end2:
         bnez $a0, outer
 inner_end:
