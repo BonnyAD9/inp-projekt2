@@ -7,7 +7,7 @@ int main(void) {
     printf("%s\n", login);
 
     int s0, s1, s2, s3, s4, s5, s7, t0, v1, zero = 0; // registers
-    char v0, a0, a1, a3, t2, t3, t4, t5, a2;
+    int v0, a0, a1, a3, t2, t3, t4, t5, a2;
     // many spaces to align the line numbers with the other file
 
 
@@ -43,7 +43,8 @@ int main(void) {
         // ; a0: current item
         // ; v0: 256
         // ; t0: count
-        s0 = zero + 256; // daddi $s0, $zero, 256
+        s0 = zero + 0; // daddi $s0, $zero, 256
+        v0 = zero + 256; // daddi $s0, $zero, 256
         a0 = (unsigned char)login[s0]; // lbu $a0, login($s0)
         if (a0 == 0) goto main_end; // beqz $a0, main_end
 count:
@@ -57,7 +58,7 @@ count:
         a0 = zero + 0; // daddi $a0, $zero, 0
         s0 = zero + 0; // daddi $s0, $zero, 0
 generate:
-        s0 = (unsigned char)counts[a0]; // lbu $s0, counts($a0)
+        t0 = (unsigned char)counts[a0]; // lbu $s0, counts($a0)
 
         if (t0 == 0) goto generate_inner_end; // beqz $t0, generate_inner_end
 generate_inner:

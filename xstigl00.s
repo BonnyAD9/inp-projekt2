@@ -43,7 +43,8 @@ main:
         ; a0: current item
         ; v0: 256
         ; t0: count
-        daddi $s0, $zero, 256
+        daddi $s0, $zero, 0
+        daddi $v0, $zero, 256
         lbu $a0, login($s0)
         beqz $a0, main_end
 count:
@@ -57,7 +58,7 @@ count:
         daddi $a0, $zero, 0
         daddi $s0, $zero, 0
 generate:
-        lbu $s0, counts($a0)
+        lbu $t0, counts($a0)
 
         beqz $t0, generate_inner_end
 generate_inner:
