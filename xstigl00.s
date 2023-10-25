@@ -43,32 +43,48 @@ main:
         ; a0: current item
         ; v0: 256
         ; t0: count
+        ; $s1: last
+        lbu $a0, login($zero)
         daddi $s0, $zero, 0
         daddi $v0, $zero, 256
-        lbu $a0, login($s0)
         beqz $a0, main_end
+        daddi $a1, $a0, 0
 count:
         lb $t0, counts($a0)
+        dsub $t1, $a0, $a1
+        bgez $t1, no_min
+        daddi $a1, $a0, 0
+no_min:
         daddi $t0, $t0, 1
+        ; nop
+        ; nop
         sb $t0, counts($a0)
+        ; nop
+        ; nop
         daddi $s0, $s0, 1
+        ; nop
+        ; nop
         lbu $a0, login($s0)
+        ; nop
+        ; nop
         bnez $a0, count
 
-        daddi $a0, $zero, 0
+        daddi $s1, $s0, 0
         daddi $s0, $zero, 0
+        ; a1 = a0 + 1
 generate:
-        lbu $t0, counts($a0)
+        lbu $t0, counts($a1)
+        daddi $a0, $a1, 0
+        daddi $a1, $a1, 1
 
         beqz $t0, generate_inner_end
 generate_inner:
-        sb $a0, login($s0)
         daddi $t0, $t0, -1
+        sb $a0, login($s0)
         daddi $s0, $s0, 1
         bnez $t0, generate_inner
 generate_inner_end:
-        daddi $a0, $a0, 1
-        bne $a0, $v0, generate
+        bne $s0, $s1, generate
 
 ; outer_end
 
