@@ -37,16 +37,27 @@ main:
 
         daddi $s0, $s0, 1
         beqz $a0, main_end
-        j last_inner1
-outer:
+
+        daddi $a3, $a0, 0
+        sb $a0, login($v1)
+        lb $a0, login($s0)
+        dsub $t0, $a3, $a1
+        daddi $s1, $s0, 0
+        daddi $s2, $s0, -1
+        bgez $t0, inner_end2
+
+        sb $a1, login($v1)
+        sb $a3, login($zero)
+
         lb $a1, login($s2)
-        daddi $s0, $s0, 1
-        daddi $s2, $s2, -1
+        beqz $a0, main_end
+
+outer:
         dsub $t0, $a0, $a1
+        daddi $s2, $s2, -1
+        daddi $s0, $s0, 1
 
         ; s2, --, s1
-        ; nop
-        ; nop
 inner:
         bgez $t0, inner_end
         lb $a2, login($s2)
@@ -75,7 +86,9 @@ last_inner1:
         sb $a1, login($v1)
         sb $a3, login($zero)
 
+        lb $a1, login($s2)
         bnez $a0, outer
+        j main_end
 last_inner2:
         daddi $a3, $a0, 0
         sb $a0, login($v1)
@@ -86,14 +99,18 @@ last_inner2:
         bgez $t0, inner_end2
 
         sb $a2, login($v1)
+        lb $a1, login($s2)
         sb $a3, login($zero)
 inner_end2:
+        lb $a1, login($s2)
         bnez $a0, outer
+        j main_end
 inner_end:
+        daddi $s2, $s0, -1
         sb $a0, login($s1)
         lb $a0, login($s0)
         daddi $s1, $s0, 0
-        daddi $s2, $s0, -1
+        lb $a1, login($s2)
         bnez $a0, outer
 
 ; outer_end
