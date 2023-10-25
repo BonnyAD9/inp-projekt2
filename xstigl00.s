@@ -17,6 +17,15 @@ login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
 params_sys5:    .space  8   ; misto pro ulozeni adresy pocatku
                             ; retezce pro vypis pomoci syscall 5
                             ; (viz nize - "funkce" print_string)
+                ; 256 zeros
+counts:         .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+                .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+                .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+                .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+                .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+                .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+                .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+                .byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
 ; CODE SEGMENT
                 .text
@@ -27,97 +36,38 @@ main:
         ; daddi   r4, r0, login   ; vozrovy vypis: adresa login: do r4
         ; jal     print_string    ; vypis pomoci print_string - viz nize
 
-        ; Insert sort
+        ; Bucket sort
 
-        daddi $s0, $zero, 1
-        lb $a1, login($zero)
-        daddi $v1, $zero, 1
-        lb $a0, login($s0)
-        beqz $a1, main_end
-
-        daddi $s0, $s0, 1
+        ; count occurences
+        ; s0: index
+        ; a0: current item
+        ; v0: 256
+        ; t0: count
+        daddi $s0, $zero, 256
+        lbu $a0, login($s0)
         beqz $a0, main_end
-
-        daddi $a3, $a0, 0
-        lb $a0, login($s0)
-        ; nop
-        dsub $t0, $a3, $a1
-        daddi $s1, $s0, 0
-        daddi $s2, $s0, -1
-        bgez $t0, inner_end2
-
-        sb $a1, login($v1)
-        sb $a3, login($zero)
-
-        lb $a1, login($s2)
-        beqz $a0, main_end
-
-outer:
-        dsub $t0, $a0, $a1
-        daddi $s2, $s2, -1
+count:
+        lb $t0, counts($a0)
+        daddi $t0, $t0, 1
+        sb $t0, counts($a0)
         daddi $s0, $s0, 1
+        lbu $a0, login($s0)
+        bnez $a0, count
 
-        ; s2, --, s1
-inner:
-        bgez $t0, inner_end
-        lb $a2, login($s2)
-        sb $a1, login($s1)
-        daddi $s1, $s1, -1
-        dsub $t0, $a0, $a2
-        daddi $s2, $s2, -1
-        beq $s1, $v1, last_inner2
+        daddi $a0, $zero, 0
+        daddi $s0, $zero, 0
+generate:
+        lbu $s0, counts($a0)
 
-        bgez $t0, inner_end
-        lb $a1, login($s2)
-        sb $a2, login($s1)
-        daddi $s1, $s1, -1
-        dsub $t0, $a0, $a1
-        daddi $s2, $s2, -1
-        bne $s1, $v1, inner
-last_inner1:
-        daddi $a3, $a0, 0
-        sb $a0, login($v1)
-        lb $a0, login($s0)
-        dsub $t0, $a3, $a1
-        daddi $s1, $s0, 0
-        daddi $s2, $s0, -1
-        bgez $t0, inner_end2
-
-        sb $a1, login($v1)
-        sb $a3, login($zero)
-
-        lb $a1, login($s2)
-        bnez $a0, outer
-
-        daddi   r4, r0, login   ; vozrovy vypis: adresa login: do r4
-        jal     print_string    ; vypis pomoci print_string - viz nize
-        syscall 0   ; halt
-last_inner2:
-        daddi $a3, $a0, 0
-        sb $a0, login($v1)
-        lb $a0, login($s0)
-        dsub $t0, $a3, $a2
-        daddi $s1, $s0, 0
-        daddi $s2, $s0, -1
-        bgez $t0, inner_end2
-
-        sb $a2, login($v1)
-        lb $a1, login($s2)
-        sb $a3, login($zero)
-inner_end2:
-        lb $a1, login($s2)
-        bnez $a0, outer
-
-        daddi   r4, r0, login   ; vozrovy vypis: adresa login: do r4
-        jal     print_string    ; vypis pomoci print_string - viz nize
-        syscall 0   ; halt
-inner_end:
-        daddi $s2, $s0, -1
-        sb $a0, login($s1)
-        lb $a0, login($s0)
-        daddi $s1, $s0, 0
-        lb $a1, login($s2)
-        bnez $a0, outer
+        beqz $t0, generate_inner_end
+generate_inner:
+        sb $a0, login($s0)
+        daddi $t0, $t0, -1
+        daddi $s0, $s0, 1
+        bnez $t0, generate_inner
+generate_inner_end:
+        daddi $a0, $a0, 1
+        bne $a0, $v0, generate
 
 ; outer_end
 
