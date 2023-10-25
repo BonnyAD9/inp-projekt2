@@ -39,8 +39,8 @@ main:
         beqz $a0, main_end
 
         daddi $a3, $a0, 0
-        sb $a0, login($v1)
         lb $a0, login($s0)
+        ; nop
         dsub $t0, $a3, $a1
         daddi $s1, $s0, 0
         daddi $s2, $s0, -1
@@ -88,7 +88,10 @@ last_inner1:
 
         lb $a1, login($s2)
         bnez $a0, outer
-        j main_end
+
+        daddi   r4, r0, login   ; vozrovy vypis: adresa login: do r4
+        jal     print_string    ; vypis pomoci print_string - viz nize
+        syscall 0   ; halt
 last_inner2:
         daddi $a3, $a0, 0
         sb $a0, login($v1)
@@ -104,7 +107,10 @@ last_inner2:
 inner_end2:
         lb $a1, login($s2)
         bnez $a0, outer
-        j main_end
+
+        daddi   r4, r0, login   ; vozrovy vypis: adresa login: do r4
+        jal     print_string    ; vypis pomoci print_string - viz nize
+        syscall 0   ; halt
 inner_end:
         daddi $s2, $s0, -1
         sb $a0, login($s1)
