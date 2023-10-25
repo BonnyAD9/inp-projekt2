@@ -52,15 +52,14 @@ main:
 count:
         lb $t0, counts($a0)
         dsub $t1, $a0, $a1
-        bgez $t1, no_min
-        daddi $a1, $a0, 0
-no_min:
+        ; nop
         daddi $t0, $t0, 1
         ; nop
         ; nop
         sb $t0, counts($a0)
-        ; nop
-        ; nop
+        bgez $t1, no_min
+        daddi $a1, $a0, 0
+no_min:
         daddi $s0, $s0, 1
         ; nop
         ; nop
