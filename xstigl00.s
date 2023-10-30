@@ -52,6 +52,7 @@ main:
         lb $a1, login($s2)
         beqz $a0, main_end
 
+        ; nop
 outer:
         dsub $t0, $a0, $a1
         daddi $s2, $s2, -1
