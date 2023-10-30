@@ -49,8 +49,8 @@ main:
         daddi $v0, $zero, 256
         beqz $a0, main_end
         dsll $a1, $a0, 2
-count:
         dsll $a0, $a0, 2
+count:
         daddi $s0, $s0, 1
         ; nop
         lw $t0, counts($a0)
@@ -58,22 +58,20 @@ count:
         lbu $a2, login($s0)
         daddi $t0, $t0, 1
         ; nop
-        ; nop
+        dsll $a2, $a2, 2
         sw $t0, counts($a0)
         bgez $t1, no_min
         daddi $a1, $a0, 0
 no_min:
         beqz $a2, count_end
 
-        dsll $a2, $a2, 2
         daddi $s0, $s0, 1
-        ; nop
         lw $t0, counts($a2)
         dsub $t1, $a2, $a1
         lbu $a0, login($s0)
         daddi $t0, $t0, 1
         ; nop
-        ; nop
+        dsll $a0, $a0, 2
         sw $t0, counts($a2)
         bgez $t1, no_min2
         daddi $a1, $a2, 0
