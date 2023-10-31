@@ -45,45 +45,44 @@ main:
         ; t0: count
         ; $s1: last
         lbu $a0, login($zero)
-        daddi $s0, $zero, 0
+        daddi $s0, $zero, 1
         daddi $v0, $zero, 256
         beqz $a0, main_end
         dsll $a1, $a0, 2
         dsll $a0, $a0, 2
-count:
-        daddi $s0, $s0, 1
         ; nop
+count:
         lw $t0, counts($a0)
         dsub $t1, $a0, $a1
         lbu $a2, login($s0)
         daddi $t0, $t0, 1
-        ; nop
-        dsll $a2, $a2, 2
-        sw $t0, counts($a0)
         bgez $t1, no_min
         daddi $a1, $a0, 0
 no_min:
+        dsll $a2, $a2, 2
+        sw $t0, counts($a0)
+        daddi $s0, $s0, 1
         beqz $a2, count_end
 
-        daddi $s0, $s0, 1
         lw $t0, counts($a2)
         dsub $t1, $a2, $a1
         lbu $a0, login($s0)
         daddi $t0, $t0, 1
-        ; nop
-        dsll $a0, $a0, 2
-        sw $t0, counts($a2)
         bgez $t1, no_min2
         daddi $a1, $a2, 0
 no_min2:
+        dsll $a0, $a0, 2
+        daddi $s0, $s0, 1
+        sw $t0, counts($a2)
         bnez $a0, count
 
 count_end:
-        daddi $s1, $s0, 0
+        ; nop
+        daddi $s1, $s0, -1
         daddi $s0, $zero, 0
+        lw $t0, counts($a1)
         ; a1 = a0 + 1
 generate:
-        lw $t0, counts($a1)
         dsrl $a0, $a1, 2
         daddi $a1, $a1, 4
 
@@ -94,6 +93,7 @@ generate_inner:
         daddi $s0, $s0, 1
         bnez $t0, generate_inner
 generate_inner_end:
+        lw $t0, counts($a1)
         bne $s0, $s1, generate
 
 ; outer_end
