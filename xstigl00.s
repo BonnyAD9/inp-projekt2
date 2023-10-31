@@ -75,7 +75,8 @@ inner:
         dsub $t0, $a0, $a1
         daddi $s2, $s2, -1
         bne $s1, $v1, inner
-last_inner1:
+
+; last_inner1:
         daddi $a3, $a0, 0
         sb $a0, login($v1)
         lb $a0, login($s0)
