@@ -44,12 +44,12 @@ main:
         ; v0: 256
         ; t0: count
         ; $s1: last
-        lbu $a0, login($zero)
+        lbu $a2, login($zero)
         daddi $s0, $zero, 1
         daddi $v0, $zero, 256
-        beqz $a0, main_end
-        dsll $a1, $a0, 2
-        dsll $a0, $a0, 2
+        beqz $a2, main_end
+        dsll $a0, $a2, 2
+        dsll $a1, $a2, 2
         ; nop
 count:
         lw $t0, counts($a0)
@@ -77,7 +77,6 @@ no_min2:
         bnez $a0, count
 
 count_end:
-        ; nop
         daddi $s1, $s0, -1
         daddi $s0, $zero, 0
         lw $t0, counts($a1)
