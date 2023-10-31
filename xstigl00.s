@@ -91,10 +91,51 @@ generate_inner:
         daddi $t0, $t0, -1
         sb $a0, login($s0)
         daddi $s0, $s0, 1
+        beqz $t0, generate_inner_end
+
+        daddi $t0, $t0, -1
+        sb $a0, login($s0)
+        daddi $s0, $s0, 1
+        beqz $t0, generate_inner_end
+
+        daddi $t0, $t0, -1
+        sb $a0, login($s0)
+        daddi $s0, $s0, 1
+        beqz $t0, generate_inner_end
+
+        daddi $t0, $t0, -1
+        sb $a0, login($s0)
+        daddi $s0, $s0, 1
         bnez $t0, generate_inner
 generate_inner_end:
         lw $t0, counts($a1)
-        bne $s0, $s1, generate
+        beq $s0, $s1, main_end
+
+        dsrl $a0, $a1, 2
+        daddi $a1, $a1, 4
+
+        beqz $t0, generate_inner_end
+
+        daddi $t0, $t0, -1
+        sb $a0, login($s0)
+        daddi $s0, $s0, 1
+        beqz $t0, generate_inner_end
+
+        daddi $t0, $t0, -1
+        sb $a0, login($s0)
+        daddi $s0, $s0, 1
+        beqz $t0, generate_inner_end
+
+        daddi $t0, $t0, -1
+        sb $a0, login($s0)
+        daddi $s0, $s0, 1
+        beqz $t0, generate_inner_end
+
+        daddi $t0, $t0, -1
+        sb $a0, login($s0)
+        daddi $s0, $s0, 1
+        beqz $t0, generate_inner_end
+        j generate_inner
 
 ; outer_end
 
