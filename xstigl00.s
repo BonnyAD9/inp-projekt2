@@ -2,7 +2,7 @@
 ; Pocet cyklu k serazeni puvodniho retezce: 937
 ; Pocet cyklu razeni sestupne serazeneho retezce: 1278
 ; Pocet cyklu razeni vzestupne serazeneho retezce: 224
-; Pocet cyklu razeni retezce s vasim loginem: 260
+; Pocet cyklu razeni retezce s vasim loginem: 269
 ; Implementovany radici algoritmus: Insert sort
 ; ------------------------------------------------
 
@@ -11,7 +11,7 @@
 ; login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
 ; login:          .asciiz "vvttpnjiiee3220---"  ; sestupne serazeny retezec
 ; login:          .asciiz "---0223eeiijnpttvv"  ; vzestupne serazeny retezec
-login:          .asciiz "xlogin00"            ; SEM DOPLNTE VLASTNI LOGIN
+login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
                                                 ; A POUZE S TIMTO ODEVZDEJTE
 
 params_sys5:    .space  8   ; misto pro ulozeni adresy pocatku
