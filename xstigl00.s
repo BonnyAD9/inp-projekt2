@@ -1,19 +1,20 @@
-; Autor reseni: Jmeno Prijmeni login
-; Pocet cyklu k serazeni puvodniho retezce:
-; Pocet cyklu razeni sestupne serazeneho retezce:
-; Pocet cyklu razeni vzestupne serazeneho retezce:
-; Pocet cyklu razeni retezce s vasim loginem:
-; Implementovany radici algoritmus:
+; Autor reseni: Jakub Antonín Štigler xstigl00
+; Pocet cyklu k serazeni puvodniho retezce: 729
+; Pocet cyklu razeni sestupne serazeneho retezce: 729
+; Pocet cyklu razeni vzestupne serazeneho retezce: 729
+; Pocet cyklu razeni retezce s vasim loginem: 578
+; Implementovany radici algoritmus: bucket sort
 ; ------------------------------------------------
 
 ; DATA SEGMENT
                 .data
-; login:          .asciiz "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."    ; puvodni uvitaci retezec
-login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
+; lorem ipsum - 7058 cylků
+login:          .asciiz "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+; login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
 ; login:          .asciiz "v"    ; puvodni uvitaci retezec
 ; login:          .asciiz "vvttpnjiiee3220---"  ; sestupne serazeny retezec
 ; login:          .asciiz "---0223eeiijnpttvv"  ; vzestupne serazeny retezec
-; login:          .asciiz "xlogin00"            ; SEM DOPLNTE VLASTNI LOGIN
+login:          .asciiz "xlogin00"            ; SEM DOPLNTE VLASTNI LOGIN
                                                 ; A POUZE S TIMTO ODEVZDEJTE
 
 params_sys5:    .space  8   ; misto pro ulozeni adresy pocatku
