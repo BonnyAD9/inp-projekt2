@@ -1,17 +1,17 @@
-; Autor reseni: Jmeno Prijmeni login
-; Pocet cyklu k serazeni puvodniho retezce:
-; Pocet cyklu razeni sestupne serazeneho retezce:
-; Pocet cyklu razeni vzestupne serazeneho retezce:
-; Pocet cyklu razeni retezce s vasim loginem:
-; Implementovany radici algoritmus:
+; Autor reseni: Jakub Antonín Štigler xstigl00
+; Pocet cyklu k serazeni puvodniho retezce: 937
+; Pocet cyklu razeni sestupne serazeneho retezce: 1278
+; Pocet cyklu razeni vzestupne serazeneho retezce: 224
+; Pocet cyklu razeni retezce s vasim loginem: 260
+; Implementovany radici algoritmus: Insert sort
 ; ------------------------------------------------
 
 ; DATA SEGMENT
                 .data
-login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
+; login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
 ; login:          .asciiz "vvttpnjiiee3220---"  ; sestupne serazeny retezec
 ; login:          .asciiz "---0223eeiijnpttvv"  ; vzestupne serazeny retezec
-; login:          .asciiz "xlogin00"            ; SEM DOPLNTE VLASTNI LOGIN
+login:          .asciiz "xlogin00"            ; SEM DOPLNTE VLASTNI LOGIN
                                                 ; A POUZE S TIMTO ODEVZDEJTE
 
 params_sys5:    .space  8   ; misto pro ulozeni adresy pocatku
