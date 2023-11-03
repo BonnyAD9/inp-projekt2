@@ -1,17 +1,17 @@
 ; Autor reseni: Jakub Antonín Štigler xstigl00
-; Pocet cyklu k serazeni puvodniho retezce: 925
-; Pocet cyklu razeni sestupne serazeneho retezce: 1214
-; Pocet cyklu razeni vzestupne serazeneho retezce: 227
-; Pocet cyklu razeni retezce s vasim loginem: 254
+; Pocet cyklu k serazeni puvodniho retezce: 922
+; Pocet cyklu razeni sestupne serazeneho retezce: 1232
+; Pocet cyklu razeni vzestupne serazeneho retezce: 223
+; Pocet cyklu razeni retezce s vasim loginem: 251
 ; Implementovany radici algoritmus: Insert sort
 ; ------------------------------------------------
 
 ; DATA SEGMENT
                 .data
-login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
+; login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
 ; login:          .asciiz "vvttpnjiiee3220---"  ; sestupne serazeny retezec
 ; login:          .asciiz "---0223eeiijnpttvv"  ; vzestupne serazeny retezec
-; login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
+login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
                                                 ; A POUZE S TIMTO ODEVZDEJTE
 
 params_sys5:    .space  8   ; misto pro ulozeni adresy pocatku
@@ -32,7 +32,8 @@ main:
         ; t0: temorary (used in conditions)
         ; v1: 1
 
-        ; raw stalls are market by nop comment
+        ; raw stalls are market by nop comment (there are no raw stalls, only
+        ; in print_string)
 
         ; inicialization, check that the string is at least 2 characters long
         daddi $s0, $zero, 1
@@ -42,12 +43,11 @@ main:
         beqz $a1, main_end
 
         daddi $s0, $s0, 1
+        dsub $t0, $a0, $a1
         beqz $a0, main_end
 
         ; first iteration on the last item
-        dsub $t0, $a3, $a1
         daddi $s2, $s0, -1
-        ; nop
         bgez $t0, inner_end2
 
         sb $a1, login($v1)
@@ -116,15 +116,15 @@ inner:
         sb $a1, login($v1)
         sb $a0, login($zero)
         lb $a0, login($s0)
-        daddi $s1, $s0, 0
 
         ; prepare for the next loop of inner
+        daddi $s1, $s0, 0
         lb $a1, login($s2)
         bnez $a0, outer
 
         ; all sorted print result and exit
-        daddi   r4, r0, login
-        jal     print_string
+        daddi r4, r0, login
+        jal print_string
         syscall 0 ; exit
 
 last_inner2:
@@ -136,50 +136,48 @@ last_inner2:
         sb $a2, login($v1)
         sb $a0, login($zero)
         lb $a0, login($s0)
-        daddi $s1, $s0, 0
 
         ; prepare for the next iteration of inner
+        daddi $s1, $s0, 0
         lb $a1, login($s2)
         bnez $a0, outer
 
         ; all sorted print result and exit
-        daddi   r4, r0, login
-        jal     print_string
+        daddi r4, r0, login
+        jal print_string
         syscall 0 ; exit
 inner_end2:
         sb $a0, login($v1)
         lb $a0, login($s0)
-        daddi $s1, $s0, 0
 
         ; prepare for the next iteration of inner
+        daddi $s1, $s0, 0
         lb $a1, login($s2)
         bnez $a0, outer
 
         ; all sorted print result and exit
-        daddi   r4, r0, login
-        jal     print_string
+        daddi r4, r0, login
+        jal print_string
         syscall 0 ; exit
 inner_end:
         ; insert a0 at the found position
         daddi $s2, $s0, -1
         sb $a0, login($s1)
         lb $a0, login($s0)
-        daddi $s1, $s0, 0
 
         ; prepare for the nest iteration of inner
+        daddi $s1, $s0, 0
         lb $a1, login($s2)
         bnez $a0, outer
 
 main_end:
         ; all sorted print result and exit
-        daddi   r4, r0, login
-        jal     print_string
+        daddi r4, r0, login
+        jal print_string
         syscall 0 ; exit
 
 print_string:   ; adresa retezce se ocekava v r4
                 sw      r4, params_sys5(r0)
                 daddi   r14, r0, params_sys5    ; adr pro syscall 5 musi do r14
-                ; nop
-                ; nop
                 syscall 5   ; systemova procedura - vypis retezce na terminal
                 jr      r31 ; return - r31 je urcen na return address
