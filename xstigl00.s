@@ -8,10 +8,10 @@
 
 ; DATA SEGMENT
                 .data
-; login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
+login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
 ; login:          .asciiz "vvttpnjiiee3220---"  ; sestupne serazeny retezec
 ; login:          .asciiz "---0223eeiijnpttvv"  ; vzestupne serazeny retezec
-login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
+; login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
                                                 ; A POUZE S TIMTO ODEVZDEJTE
 
 params_sys5:    .space  8   ; misto pro ulozeni adresy pocatku
@@ -114,11 +114,9 @@ inner:
         ; last interation when jumped from the second part of inner
         ; and insert a0 at the correct position
         daddi $a3, $a0, 0
-        sb $a0, login($v1)
-        lb $a0, login($s0)
-        dsub $t0, $a3, $a1
         daddi $s1, $s0, 0
         daddi $s2, $s0, -1
+        lb $a0, login($s0)
         bgez $t0, inner_end2
 
         sb $a1, login($v1)
@@ -137,17 +135,25 @@ last_inner2:
         ; last iteration when jumped from the first part of inner
         ; and insert a0 at the correct position
         daddi $a3, $a0, 0
-        sb $a0, login($v1)
-        lb $a0, login($s0)
-        dsub $t0, $a3, $a2
         daddi $s1, $s0, 0
         daddi $s2, $s0, -1
+        lb $a0, login($s0)
         bgez $t0, inner_end2
 
         sb $a2, login($v1)
-        lb $a1, login($s2)
         sb $a3, login($zero)
+
+        ; prepare for the next iteration of inner
+        lb $a1, login($s2)
+        bnez $a0, outer
+
+        ; all sorted print result and exit
+        daddi   r4, r0, login
+        jal     print_string
+        syscall 0 ; exit
 inner_end2:
+        sb $a3, login($v1)
+
         ; prepare for the next iteration of inner
         lb $a1, login($s2)
         bnez $a0, outer
