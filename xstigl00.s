@@ -113,14 +113,13 @@ inner:
 ; last_inner1:
         ; last interation when jumped from the second part of inner
         ; and insert a0 at the correct position
-        daddi $a3, $a0, 0
         daddi $s1, $s0, 0
         daddi $s2, $s0, -1
-        lb $a0, login($s0)
         bgez $t0, inner_end2
 
         sb $a1, login($v1)
-        sb $a3, login($zero)
+        sb $a0, login($zero)
+        lb $a0, login($s0)
 
         ; prepare for the next loop of inner
         lb $a1, login($s2)
@@ -134,14 +133,13 @@ inner:
 last_inner2:
         ; last iteration when jumped from the first part of inner
         ; and insert a0 at the correct position
-        daddi $a3, $a0, 0
         daddi $s1, $s0, 0
         daddi $s2, $s0, -1
-        lb $a0, login($s0)
         bgez $t0, inner_end2
 
         sb $a2, login($v1)
-        sb $a3, login($zero)
+        sb $a0, login($zero)
+        lb $a0, login($s0)
 
         ; prepare for the next iteration of inner
         lb $a1, login($s2)
@@ -152,7 +150,8 @@ last_inner2:
         jal     print_string
         syscall 0 ; exit
 inner_end2:
-        sb $a3, login($v1)
+        sb $a0, login($v1)
+        lb $a0, login($s0)
 
         ; prepare for the next iteration of inner
         lb $a1, login($s2)
