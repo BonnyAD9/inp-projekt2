@@ -83,7 +83,7 @@ inner:
         ;
         ; The original inner loop was unwrapped so that there are now two
         ; iterations of the original loop in single iteration of this loop
-        ; and they are intertwined to remove all raw stalls.
+        ; and they are interlaced to remove all raw stalls.
         ;
         ; The last iteration was taken out of the loop (last_inner1 and
         ; last_inner2) to avoid reading at negative indexes.
@@ -114,11 +114,12 @@ inner:
         daddi $s2, $s0, -1
         bgez $t0, inner_end2
 
+        ; a0 should be inserted all the way at the start of the array
         sb $a1, login($v1)
         sb $a0, login($zero)
-        lb $a0, login($s0)
 
         ; prepare for the next loop of inner
+        lb $a0, login($s0)
         daddi $s1, $s0, 0
         lb $a1, login($s2)
         bnez $a0, outer
@@ -134,11 +135,12 @@ last_inner2:
         daddi $s2, $s0, -1
         bgez $t0, inner_end2
 
+        ; a0 should be inserted all the way at the start of the array
         sb $a2, login($v1)
         sb $a0, login($zero)
-        lb $a0, login($s0)
 
         ; prepare for the next iteration of inner
+        lb $a0, login($s0)
         daddi $s1, $s0, 0
         lb $a1, login($s2)
         bnez $a0, outer
@@ -148,10 +150,11 @@ last_inner2:
         jal print_string
         syscall 0 ; exit
 inner_end2:
+        ; a0 is inserted at index 1
         sb $a0, login($v1)
-        lb $a0, login($s0)
 
         ; prepare for the next iteration of inner
+        lb $a0, login($s0)
         daddi $s1, $s0, 0
         lb $a1, login($s2)
         bnez $a0, outer
@@ -161,12 +164,16 @@ inner_end2:
         jal print_string
         syscall 0 ; exit
 inner_end:
+        ; what is done every time after the inner loop ends looping
+        ; (last_inner1 and last_inner2 have this embeded in them to remove
+        ; raw stalls)
+        ;
         ; insert a0 at the found position
         daddi $s2, $s0, -1
         sb $a0, login($s1)
-        lb $a0, login($s0)
 
         ; prepare for the nest iteration of inner
+        lb $a0, login($s0)
         daddi $s1, $s0, 0
         lb $a1, login($s2)
         bnez $a0, outer
