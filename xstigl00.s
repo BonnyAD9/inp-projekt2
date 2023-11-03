@@ -8,8 +8,8 @@
 
 ; DATA SEGMENT
                 .data
-; login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
-login:          .asciiz "vvttpnjiiee3220---"  ; sestupne serazeny retezec
+login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
+; login:          .asciiz "vvttpnjiiee3220---"  ; sestupne serazeny retezec
 ; login:          .asciiz "---0223eeiijnpttvv"  ; vzestupne serazeny retezec
 ; login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
                                                 ; A POUZE S TIMTO ODEVZDEJTE
@@ -45,21 +45,18 @@ main:
         beqz $a0, main_end
 
         ; first iteration on the last item
-        daddi $a3, $a0, 0
-        lb $a0, login($s0)
-        ; nop
         dsub $t0, $a3, $a1
-        daddi $s1, $s0, 0
         daddi $s2, $s0, -1
+        ; nop
         bgez $t0, inner_end2
 
         sb $a1, login($v1)
-        sb $a3, login($zero)
+        sb $a0, login($zero)
+        lb $a0, login($s0)
 
         lb $a1, login($s2)
+        daddi $s1, $s0, 0
         beqz $a0, main_end
-
-        ; nop
 outer:
         ; outer loop, goes trough all the items in the array to be inserted
         ; in the ordered part of the array
