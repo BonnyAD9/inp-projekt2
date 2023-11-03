@@ -1,15 +1,15 @@
 ; Autor reseni: Jakub Antonín Štigler xstigl00
-; Pocet cyklu k serazeni puvodniho retezce: 937
-; Pocet cyklu razeni sestupne serazeneho retezce: 1278
-; Pocet cyklu razeni vzestupne serazeneho retezce: 224
-; Pocet cyklu razeni retezce s vasim loginem: 269
+; Pocet cyklu k serazeni puvodniho retezce: 925
+; Pocet cyklu razeni sestupne serazeneho retezce: 1214
+; Pocet cyklu razeni vzestupne serazeneho retezce: 227
+; Pocet cyklu razeni retezce s vasim loginem: 254
 ; Implementovany radici algoritmus: Insert sort
 ; ------------------------------------------------
 
 ; DATA SEGMENT
                 .data
-login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
-; login:          .asciiz "vvttpnjiiee3220---"  ; sestupne serazeny retezec
+; login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
+login:          .asciiz "vvttpnjiiee3220---"  ; sestupne serazeny retezec
 ; login:          .asciiz "---0223eeiijnpttvv"  ; vzestupne serazeny retezec
 ; login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
                                                 ; A POUZE S TIMTO ODEVZDEJTE
@@ -133,7 +133,6 @@ inner:
 last_inner2:
         ; last iteration when jumped from the first part of inner
         ; and insert a0 at the correct position
-        daddi $s1, $s0, 0
         daddi $s2, $s0, -1
         bgez $t0, inner_end2
 
