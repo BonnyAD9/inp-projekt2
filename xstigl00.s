@@ -1,17 +1,17 @@
-; Autor reseni: Jmeno Prijmeni login
-; Pocet cyklu k serazeni puvodniho retezce:
-; Pocet cyklu razeni sestupne serazeneho retezce:
-; Pocet cyklu razeni vzestupne serazeneho retezce:
-; Pocet cyklu razeni retezce s vasim loginem:
-; Implementovany radici algoritmus:
+; Autor reseni: Jakub Antonín Štigler xstigl00
+; Pocet cyklu k serazeni puvodniho retezce: 937
+; Pocet cyklu razeni sestupne serazeneho retezce: 1278
+; Pocet cyklu razeni vzestupne serazeneho retezce: 224
+; Pocet cyklu razeni retezce s vasim loginem: 269
+; Implementovany radici algoritmus: Insert sort
 ; ------------------------------------------------
 
 ; DATA SEGMENT
                 .data
-login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
+; login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
 ; login:          .asciiz "vvttpnjiiee3220---"  ; sestupne serazeny retezec
 ; login:          .asciiz "---0223eeiijnpttvv"  ; vzestupne serazeny retezec
-; login:          .asciiz "xlogin00"            ; SEM DOPLNTE VLASTNI LOGIN
+login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
                                                 ; A POUZE S TIMTO ODEVZDEJTE
 
 params_sys5:    .space  8   ; misto pro ulozeni adresy pocatku
@@ -29,129 +29,97 @@ main:
 
         ; Insert sort
 
-        ; $s0: unsorted index
-        ; $s1 - $s5: indexes
-        ; $s7: result index
-        ; $a0: current element
-        ; $a1: saved element
-        ; $t2 - $t5: elements
-        ; $t0: temporary
-        lb $a1, login($zero)
         daddi $s0, $zero, 1
-        daddi $s1, $zero, 1
+        lb $a1, login($zero)
+        daddi $v1, $zero, 1
+        lb $a0, login($s0)
         beqz $a1, main_end
 
-        lb $a1, login($s0)
-        dsub $t1, $zero, $s0
-        daddi $s2, $s0, -1
-        lb $a3, login($s0)
-        beqz $a1, main_end
-main_outer:
-        daddi $t1, $t1, 3
         daddi $s0, $s0, 1
-        daddi $s3, $s1, -2
-        bgez $t1, main_inner_3_less
+        beqz $a0, main_end
 
-        daddi $s4, $s1, -3
-        daddi $s5, $s1, -4
+        daddi $a3, $a0, 0
+        lb $a0, login($s0)
+        ; nop
+        dsub $t0, $a3, $a1
+        daddi $s1, $s0, 0
+        daddi $s2, $s0, -1
+        bgez $t0, inner_end2
 
-main_inner_4_more:
-        ; $5 $4 $3 $2 $1
-        lb $t2, login($s2)
+        sb $a1, login($v1)
+        sb $a3, login($zero)
 
+        lb $a1, login($s2)
+        beqz $a0, main_end
+
+        ; nop
+outer:
+        dsub $t0, $a0, $a1
+        daddi $s2, $s2, -1
+        daddi $s0, $s0, 1
+
+        ; s2, --, s1
+inner:
+        bgez $t0, inner_end
+        lb $a2, login($s2)
         sb $a1, login($s1)
-        lb $a3, login($s0)
-        dsub $t0, $a1, $t2
-        lb $t3, login($s3)
-        dsub $t1, $zero, $s0
-        bgez $t0, main_inner_end
+        daddi $s1, $s1, -1
+        dsub $t0, $a0, $a2
+        daddi $s2, $s2, -1
+        beq $s1, $v1, last_inner2
 
-        sb $t2, login($s1)
-        sb $a1, login($s2)
-        dsub $t0, $a1, $t3
-        daddi $s1, $s1, -4
-        lb $t4, login($s4)
-        bgez $t0, main_inner_end
+        bgez $t0, inner_end
+        lb $a1, login($s2)
+        sb $a2, login($s1)
+        daddi $s1, $s1, -1
+        dsub $t0, $a0, $a1
+        daddi $s2, $s2, -1
+        bne $s1, $v1, inner
 
-        sb $t3, login($s2)
-        sb $a1, login($s3)
-        dsub $t0, $a1, $t4
-        daddi $s2, $s2, -4
-        lb $t5, login($s5)
-        bgez $t0, main_inner_end
+; last_inner1:
+        daddi $a3, $a0, 0
+        sb $a0, login($v1)
+        lb $a0, login($s0)
+        dsub $t0, $a3, $a1
+        daddi $s1, $s0, 0
+        daddi $s2, $s0, -1
+        bgez $t0, inner_end2
 
-        sb $t4, login($s3)
-        dsub $t0, $a1, $t5
-        sb $a1, login($s4)
-        daddi $s3, $s3, -4
-        bgez $t0, main_inner_end
+        sb $a1, login($v1)
+        sb $a3, login($zero)
 
-        sb $t5, login($s4)
-        daddi $s5, $s1, -4
-        daddi $s4, $s1, -3
+        lb $a1, login($s2)
+        bnez $a0, outer
 
-        sb $a1, login($s1)
-        bgez $s5, main_inner_4_more
+        daddi   r4, r0, login   ; vozrovy vypis: adresa login: do r4
+        jal     print_string    ; vypis pomoci print_string - viz nize
+        syscall 0   ; halt
+last_inner2:
+        daddi $a3, $a0, 0
+        sb $a0, login($v1)
+        lb $a0, login($s0)
+        dsub $t0, $a3, $a2
+        daddi $s1, $s0, 0
+        daddi $s2, $s0, -1
+        bgez $t0, inner_end2
 
-        dsub $t1, $zero, $s0
-        beqz $s1, main_inner_end
+        sb $a2, login($v1)
+        lb $a1, login($s2)
+        sb $a3, login($zero)
+inner_end2:
+        lb $a1, login($s2)
+        bnez $a0, outer
 
-        ; unwrapped loop for 3 or less elements
-        ; two consecutive iterations are unwrapped into single iteration
-        ; first part of the loop is unwrapped
-main_inner_3_less:
-        ; loop 3: $s2 $s1
-
-        lb $a0, login($s2)
-        daddi $s3, $s2, -1
-
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;
-        dsub $t0, $a1, $a0
-        lb $a3, login($s0)
-        dsub $t1, $zero, $s0
-        bgez $t0, main_inner_end
-
+        daddi   r4, r0, login   ; vozrovy vypis: adresa login: do r4
+        jal     print_string    ; vypis pomoci print_string - viz nize
+        syscall 0   ; halt
+inner_end:
+        daddi $s2, $s0, -1
         sb $a0, login($s1)
-        sb $a1, login($s2)
-        beqz $s2, main_inner_end
-
-        ; loop 2: $s3 $s2 ($s1)
-        lb $a0, login($s3)
-        daddi $s4, $s1, -1
-        daddi $s5, $s3, -1
-
-        dsub $t0, $a1, $a0
+        lb $a0, login($s0)
         daddi $s1, $s0, 0
-        daddi $s2, $s0, -1
-        bgez $t0, main_inner_end_s12
-
-        sb $a1, login($s3)
-        sb $a0, login($s4)
-        beqz $s3, main_inner_end_s12
-
-        ; loop 1: $s1 $s3
-        lb $a0, login($s5)
-        sb $a1, login($s5)
-
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;
-        dsub $t0, $a1, $a0
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;
-        bgez $t0, main_inner_end_s12
-
-        sb $a0, login($s3)
-
-        ; now i know that this is the first element
-        sb $a1, login($zero)
-
-        daddi $a1, $a3, 0
-        bnez $a3, main_outer
-main_inner_end:
-        daddi $s1, $s0, 0
-        daddi $s2, $s0, -1
-main_inner_end_s12:
-        daddi $a1, $a3, 0
-        bnez $a3, main_outer
+        lb $a1, login($s2)
+        bnez $a0, outer
 
 ; outer_end
 
@@ -164,5 +132,7 @@ main_end:
 print_string:   ; adresa retezce se ocekava v r4
                 sw      r4, params_sys5(r0)
                 daddi   r14, r0, params_sys5    ; adr pro syscall 5 musi do r14
+                ; nop
+                ; nop
                 syscall 5   ; systemova procedura - vypis retezce na terminal
                 jr      r31 ; return - r31 je urcen na return address
