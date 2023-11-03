@@ -25,12 +25,13 @@ main:
 
         ; Insert sort
 
-        ; s0: index of first unsorted item
+        ; List of used registers and their usage/meaning:
+        ; s0:     index of first unsorted item
         ; s1, s2: indexes
-        ; a0: inserted item
-        ; a1, a2, a3: items from login
-        ; t0: temorary (used in conditions)
-        ; v1: 1
+        ; a0:     inserted item
+        ; a1, a2: items from login
+        ; t0:     temorary (used in conditions)
+        ; v1:     1
 
         ; raw stalls are market by nop comment (there are no raw stalls, only
         ; in print_string)
