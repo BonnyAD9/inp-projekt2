@@ -88,7 +88,7 @@ inner:
         ; The last iteration was taken out of the loop (last_inner1 and
         ; last_inner2) to avoid reading at negative indexes.
         ;
-        ; You can see the two symetric parts that just use different registers.
+        ; You can see the two symetric parts that just have a1 and a2 swapped
 
         ; inner part1:
         bgez $t0, inner_end
@@ -115,7 +115,8 @@ inner:
         bgez $t0, inner_end2
 
         ; a0 should be inserted all the way at the start of the array
-        sb $a1, login($v1)
+        sb $a1, login($v1) ; this line is the only difference between
+                           ; last_inner1 and last_inner2
         sb $a0, login($zero)
 
         ; prepare for the next loop of inner
@@ -136,7 +137,8 @@ last_inner2:
         bgez $t0, inner_end2
 
         ; a0 should be inserted all the way at the start of the array
-        sb $a2, login($v1)
+        sb $a2, login($v1) ; this line is the only difference between
+                           ; last_inner1 and last_inner2
         sb $a0, login($zero)
 
         ; prepare for the next iteration of inner
