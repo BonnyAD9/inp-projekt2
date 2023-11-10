@@ -3,7 +3,8 @@
 int main(void) {
     // rewrite the asm code in C so that i can debug it more esily :)
     // char login[] = "vitejte-v-inp-2023\0";
-    char login[] = "vvttpnjiiee3220---\0";
+    // char login[] = "vvttpnjiiee3220---\0";
+    char login[] = "abcdef\0";
     printf("%s\n", login);
 
     int s0, s1, s2, s3, s4, s5, s7, t0, v1, v0, t1, zero = 0; // registers

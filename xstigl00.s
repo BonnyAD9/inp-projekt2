@@ -1,18 +1,18 @@
 ; Autor reseni: Jakub Antonín Štigler xstigl00
-; Pocet cyklu k serazeni puvodniho retezce: 633
-; Pocet cyklu razeni sestupne serazeneho retezce: 688
-; Pocet cyklu razeni vzestupne serazeneho retezce: 211
-; Pocet cyklu razeni retezce s vasim loginem: 165
+; Pocet cyklu k serazeni puvodniho retezce: 635
+; Pocet cyklu razeni sestupne serazeneho retezce: 689
+; Pocet cyklu razeni vzestupne serazeneho retezce: 213
+; Pocet cyklu razeni retezce s vasim loginem: 167
 ; Implementovany radici algoritmus: Insert sort
 ; ------------------------------------------------
 
 ; DATA SEGMENT
                 .data
-login:          .asciiz "abcdefg"    ; puvodni uvitaci retezec
+; login:          .asciiz "abcdefg"    ; puvodni uvitaci retezec
 ; login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
 ; login:          .asciiz "vvttpnjiiee3220---"  ; sestupne serazeny retezec
 ; login:          .asciiz "---0223eeiijnpttvv"  ; vzestupne serazeny retezec
-; login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
+login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
                                                 ; A POUZE S TIMTO ODEVZDEJTE
 
 params_sys5:    .space  8   ; misto pro ulozeni adresy pocatku
@@ -36,20 +36,23 @@ main:
         ; t0, t1: temorary (used in conditions)
         ; v1:     1
         ; v0:     2
-        lb $a0, login($zero)
+        lb $a2, login($zero)
         daddi $v1, $zero, 1
         daddi $v0, $zero, 2
-        beqz $a0, main_end
-        lb $a1, login($v1)
+        beqz $a2, main_end
+        lb $a3, login($v1)
         daddi $s2, $zero, 1
         daddi $s3, $zero, 3
-        beqz $a1, main_end
-        sltu $t0, $a1, $a0
+        beqz $a3, main_end
+        sltu $t0, $a3, $a2
         daddi $s0, $zero, 2
         daddi $s1, $zero, 3
-        beqz $t0, outer
-        sb $a0, login($v1)
-        sb $a1, login($zero)
+        lb $a0, login($v0)
+        beqz $t0, no_swap
+        sb $a2, login($v1)
+        sb $a3, login($zero)
+no_swap:
+        beqz $a0, main_end
 
 outer:
         lb $a1, login($s1)
