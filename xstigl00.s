@@ -175,17 +175,14 @@ insert_single_last03:
         j inner_end
 
 inner_single_end:
-        sb $a0, login($s3)
         daddi $s0, $s0, 2
         daddi $s1, $s1, 2
+        sb $a0, login($s3)
 
-        ; nop
 inner_end:
+        lb $a0, login($s0)
         daddi $s2, $s0, -1
         daddi $s3, $s1, 0
-        lb $a0, login($s0)
-        ; nop
-        ; nop
         bnez $a0, outer
 
 main_end:
