@@ -1,5 +1,5 @@
 TARGET:=main
-CFLAGS:=-g -Wall -std=c17 -fsanitize=address
+CFLAGS:=-g -Wall -std=c17 -fsanitize=address -Wno-unused-variable
 RFLAGS:=-std=c17 -DNDEBUG -O3
 CFILES:=main.c
 

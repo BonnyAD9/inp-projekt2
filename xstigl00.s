@@ -8,10 +8,10 @@
 
 ; DATA SEGMENT
                 .data
-; login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
+login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
 ; login:          .asciiz "vvttpnjiiee3220---"  ; sestupne serazeny retezec
 ; login:          .asciiz "---0223eeiijnpttvv"  ; vzestupne serazeny retezec
-login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
+; login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
                                                 ; A POUZE S TIMTO ODEVZDEJTE
 
 params_sys5:    .space  8   ; misto pro ulozeni adresy pocatku
@@ -32,153 +32,65 @@ main:
         ; a1, a2: items from login
         ; t0:     temorary (used in conditions)
         ; v1:     1
-
-        ; raw stalls are market by nop comment (there are no raw stalls, only
-        ; in print_string)
-
-        ; inicialization, check that the string is at least 2 characters long
         daddi $s0, $zero, 1
-        lb $a1, login($zero)
+        daddi $s1, $zero, 2
         daddi $v1, $zero, 1
-        lb $a0, login($s0)
-        beqz $a1, main_end
-
-        daddi $s0, $s0, 1
-        dsub $t0, $a0, $a1
+        lb $a0, login($zero)
         beqz $a0, main_end
 
-        ; first iteration on the last item
-        daddi $s2, $s0, -1
-        bgez $t0, inner_end2
-
-        sb $a1, login($v1)
-        sb $a0, login($zero)
-        lb $a0, login($s0)
-
-        lb $a1, login($s2)
-        daddi $s1, $s0, 0
-        beqz $a0, main_end
 outer:
-        ; outer loop, goes trough all the items in the array to be inserted
-        ; in the ordered part of the array
-
-        ; inicialization for inner loop
-        dsub $t0, $a0, $a1
-        daddi $s2, $s2, -1
-        daddi $s0, $s0, 1
-
-        ; s1 starts at the same position as original s0 (the current s0 is
-        ; already increased), s2 is s1 - 2:
-        ; s2, --, s1, s0
-        ; in the loop below, s1 and s2 decrease by one twice in each iteration
-        ; (once in one iteration of the original loop), loop jumps to last
-        ; iteration when s1 == 0:
-        ; 0   1   2   3   4   5
-        ; --, --, s2, --, s1, s0
-        ; --, s2, --, s1, --, s0
-        ; s2, --, s1, --, --, s0
-        ; --, s1, --, --, --, s0
-inner:
-        ; inner finds where to put a0, moves the array to right on its way.
-        ;
-        ; The original inner loop was unwrapped so that there are now two
-        ; iterations of the original loop in single iteration of this loop
-        ; and they are interlaced to remove all raw stalls.
-        ;
-        ; The last iteration was taken out of the loop (last_inner1 and
-        ; last_inner2) to avoid reading at negative indexes.
-        ;
-        ; You can see the two symetric parts that just have a1 and a2 swapped
-
-        ; inner part1:
-        bgez $t0, inner_end
+        lb $a0, login($s0)
+        beqz $a0, main_end
+        lb $a1, login($s1)
+        beqz $a1, single_prep
+        sltu $t0, $a1, $a0
+        beqz $t0, no_swap
+        lb $a1, login($s0)
+        lb $a0, login($s1)
+no_swap:
+        daddi $s2, $s0, -1
+        daddi $s3, $s1, 0
+insert_double:
         lb $a2, login($s2)
-        sb $a1, login($s1)
-        daddi $s1, $s1, -1
-        dsub $t0, $a0, $a2
+        sltu $t0, $a1, $a2
+        beqz $t0, insert_single_prep
+        sb $a2, login($s3)
         daddi $s2, $s2, -1
-        beq $s1, $v1, last_inner2
+        daddi $s3, $s3, -1
+        bgez $s2, insert_double
 
-        ; inner part2
-        bgez $t0, inner_end
-        lb $a1, login($s2)
-        sb $a2, login($s1)
-        daddi $s1, $s1, -1
-        dsub $t0, $a0, $a1
+; inner_insert_double_end:
+        sb $a0, login($zero)
+        sb $a1, login($v1)
+        daddi $s0, $s0, 2
+        daddi $s1, $s1, 2
+        j outer
+
+insert_single_prep:
+        sb $a1, login($s3)
+single_prep:
+        daddi $s3, $s3, -1
+
+insert_single:
+        lb $a2, login($s2)
+        sltu $t0, $a0, $a2
+        beqz $t0, inner_end
+        sb $a2, login($s3)
         daddi $s2, $s2, -1
-        bne $s1, $v1, inner
+        daddi $s3, $s3, -1
+        bgez $s2, insert_single
 
-; last_inner1:
-        ; last interation when jumped from the second part of inner
-        ; and insert a0 at the correct position
-        daddi $s2, $s0, -1
-        bgez $t0, inner_end2
-
-        ; a0 should be inserted all the way at the start of the array
-        sb $a1, login($v1) ; this line is the only difference between
-                           ; last_inner1 and last_inner2
+; inner_insert_single_end:
         sb $a0, login($zero)
+        daddi $s0, $s0, 2
+        daddi $s1, $s1, 2
+        j outer
 
-        ; prepare for the next loop of inner
-        lb $a0, login($s0)
-        daddi $s1, $s0, 0
-        lb $a1, login($s2)
-        bnez $a0, outer
-
-        ; all sorted print result and exit
-        daddi r4, r0, login
-        jal print_string
-        syscall 0 ; exit
-
-last_inner2:
-        ; last iteration when jumped from the first part of inner
-        ; and insert a0 at the correct position
-        daddi $s2, $s0, -1
-        bgez $t0, inner_end2
-
-        ; a0 should be inserted all the way at the start of the array
-        sb $a2, login($v1) ; this line is the only difference between
-                           ; last_inner1 and last_inner2
-        sb $a0, login($zero)
-
-        ; prepare for the next iteration of inner
-        lb $a0, login($s0)
-        daddi $s1, $s0, 0
-        lb $a1, login($s2)
-        bnez $a0, outer
-
-        ; all sorted print result and exit
-        daddi r4, r0, login
-        jal print_string
-        syscall 0 ; exit
-inner_end2:
-        ; a0 is inserted at index 1
-        sb $a0, login($v1)
-
-        ; prepare for the next iteration of inner
-        lb $a0, login($s0)
-        daddi $s1, $s0, 0
-        lb $a1, login($s2)
-        bnez $a0, outer
-
-        ; all sorted print result and exit
-        daddi r4, r0, login
-        jal print_string
-        syscall 0 ; exit
 inner_end:
-        ; what is done every time after the inner loop ends looping
-        ; (last_inner1 and last_inner2 have this embeded in them to remove
-        ; raw stalls)
-        ;
-        ; insert a0 at the found position
-        daddi $s2, $s0, -1
-        sb $a0, login($s1)
-
-        ; prepare for the nest iteration of inner
-        lb $a0, login($s0)
-        daddi $s1, $s0, 0
-        lb $a1, login($s2)
-        bnez $a0, outer
+        sb $a0, login($s3)
+        daddi $s0, $s0, 2
+        daddi $s1, $s1, 2
+        j outer
 
 main_end:
         ; all sorted print result and exit
