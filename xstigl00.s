@@ -1,5 +1,5 @@
 ; Autor reseni: Jakub Antonín Štigler xstigl00
-; Pocet cyklu k serazeni puvodniho retezce: 950
+; Pocet cyklu k serazeni puvodniho retezce: 924
 ; Pocet cyklu razeni sestupne serazeneho retezce: 1232
 ; Pocet cyklu razeni vzestupne serazeneho retezce: 223
 ; Pocet cyklu razeni retezce s vasim loginem: 251
@@ -58,30 +58,30 @@ outer:
         ; nop
         ; nop
         beqz $a1, single_prep
-        sltu $t0, $a1, $a0
+        sltu $t1, $a1, $a0
         lb $a2, login($s2)
         ; nop
-        beqz $t0, insert_double
+        ; nop
+        sltu $t0, $a1, $a2
+        beqz $t1, insert_double
         lb $a1, login($s0)
         lb $a0, login($s1)
 
 insert_double:
-        sltu $t0, $a1, $a2
         daddi $s2, $s2, -1
-        ; nop
         beqz $t0, insert_single_prep
+        lb $a3, login($s2)
         sb $a2, login($s3)
         daddi $s3, $s3, -1
-        lb $a3, login($s2)
+        sltu $t0, $a1, $a3
         beqz $s2, insert_double_last
 
-        sltu $t0, $a1, $a3
         daddi $s2, $s2, -1
-        ; nop
         beqz $t0, insert_single_prep
+        lb $a2, login($s2)
         sb $a3, login($s3)
         daddi $s3, $s3, -1
-        lb $a2, login($s2)
+        sltu $t0, $a1, $a2
         bnez $s2, insert_double
 
 ; insert_double_last:
