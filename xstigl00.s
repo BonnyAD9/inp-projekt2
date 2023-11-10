@@ -1,5 +1,5 @@
 ; Autor reseni: Jakub Antonín Štigler xstigl00
-; Pocet cyklu k serazeni puvodniho retezce: 719
+; Pocet cyklu k serazeni puvodniho retezce: 690
 ; Pocet cyklu razeni sestupne serazeneho retezce: 1232
 ; Pocet cyklu razeni vzestupne serazeneho retezce: 223
 ; Pocet cyklu razeni retezce s vasim loginem: 251
@@ -70,16 +70,16 @@ insert_double:
         lb $a3, login($s2)
         sb $a2, login($s3)
         daddi $s3, $s3, -1
-        daddi $s2, $s2, -1
         sltu $t0, $a1, $a3
+        daddi $s2, $s2, -1
         beq $s3, $v0, insert_double_last
 
         beqz $t0, insert_single_prep3
         lb $a2, login($s2)
         sb $a3, login($s3)
         daddi $s3, $s3, -1
-        daddi $s2, $s2, -1
         sltu $t0, $a1, $a2
+        daddi $s2, $s2, -1
         bne $s3, $v0, insert_double
 
 ; insert_double_last:
@@ -128,27 +128,29 @@ insert_double_last013:
 
 insert_single_prep3:
         daddi $a2, $a3, 0
+        ; nop
 insert_single_prep:
         sb $a1, login($s3)
 single_prep:
         sltu $t0, $a0, $a2;
         daddi $s3, $s3, -1
 
+        ; nop
 insert_single:
         beqz $t0, inner_single_end
         lb $a3, login($s2)
         sb $a2, login($s3)
         daddi $s3, $s3, -1
-        daddi $s2, $s2, -1
         sltu $t0, $a0, $a3
+        daddi $s2, $s2, -1
         beq $s3, $v1, insert_single_last
 
         beqz $t0, inner_single_end
         lb $a2, login($s2)
         sb $a3, login($s3)
         daddi $s3, $s3, -1
-        daddi $s2, $s2, -1
         sltu $t0, $a0, $a2
+        daddi $s2, $s2, -1
         bne $s3, $v1, insert_single
 
 ; insert_single_last:
@@ -191,5 +193,7 @@ main_end:
 print_string:   ; adresa retezce se ocekava v r4
                 sw      r4, params_sys5(r0)
                 daddi   r14, r0, params_sys5    ; adr pro syscall 5 musi do r14
+                ; nop
+                ; nop
                 syscall 5   ; systemova procedura - vypis retezce na terminal
                 jr      r31 ; return - r31 je urcen na return address
