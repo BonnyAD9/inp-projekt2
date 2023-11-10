@@ -41,12 +41,10 @@ main:
         daddi $s1, $zero, 3
         lb $a1, login($v1)
         daddi $s2, $zero, 1
+        sltu $t0, $a1, $a0
         daddi $s3, $zero, 3
         beqz $a1, main_end
 
-        sltu $t0, $a1, $a0
-        ; nop
-        ; nop
         beqz $t0, outer
         sb $a0, login($v1)
         sb $a1, login($zero)
