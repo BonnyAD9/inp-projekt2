@@ -1,5 +1,5 @@
 ; Autor reseni: Jakub Antonín Štigler xstigl00
-; Pocet cyklu k serazeni puvodniho retezce: 782
+; Pocet cyklu k serazeni puvodniho retezce: 768
 ; Pocet cyklu razeni sestupne serazeneho retezce: 1232
 ; Pocet cyklu razeni vzestupne serazeneho retezce: 223
 ; Pocet cyklu razeni retezce s vasim loginem: 251
@@ -85,41 +85,6 @@ insert_double:
         bne $s3, $v0, insert_double
 
 ; insert_double_last:
-        lb $a3, login($zero)
-        ; nop
-        ; nop
-        sltu $t0, $a1, $a3
-        ; nop
-        ; nop
-        beq $t0, $v1, insert_double_last013
-
-        sltu $t0, $a0, $a3
-        ; nop
-        ; nop
-        beq $t0, $v1, insert_double_last031
-
-; insert_double_last301:
-        sb $a0, login($v1)
-        sb $a1, login($v0)
-        j inner_end
-insert_double_last031:
-        sb $a0, login($zero)
-        sb $a3, login($v1)
-        sb $a1, login($v0)
-        j inner_end
-insert_double_last013:
-        sb $a0, login($zero)
-        sb $a1, login($v1)
-        sb $a3, login($v0)
-        j inner_end
-
-insert_double_last:
-        lb $a2, login($zero)
-        ; nop
-        ; nop
-        sltu $t0, $a1, $a2
-        ; nop
-        ; nop
         beq $t0, $v1, insert_double_last012
 
         sltu $t0, $a0, $a2
@@ -127,7 +92,7 @@ insert_double_last:
         ; nop
         beq $t0, $v1, insert_double_last021
 
-; insert_double_last201:
+; insert_double_last301:
         sb $a0, login($v1)
         sb $a1, login($v0)
         j inner_end
@@ -140,6 +105,29 @@ insert_double_last012:
         sb $a0, login($zero)
         sb $a1, login($v1)
         sb $a2, login($v0)
+        j inner_end
+
+insert_double_last:
+        beq $t0, $v1, insert_double_last013
+
+        sltu $t0, $a0, $a3
+        ; nop
+        ; nop
+        beq $t0, $v1, insert_double_last031
+
+; insert_double_last201:
+        sb $a0, login($v1)
+        sb $a1, login($v0)
+        j inner_end
+insert_double_last031:
+        sb $a0, login($zero)
+        sb $a3, login($v1)
+        sb $a1, login($v0)
+        j inner_end
+insert_double_last013:
+        sb $a0, login($zero)
+        sb $a1, login($v1)
+        sb $a3, login($v0)
         j inner_end
 
 insert_single_prep3:
