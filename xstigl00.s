@@ -1,5 +1,5 @@
 ; Autor reseni: Jakub Antonín Štigler xstigl00
-; Pocet cyklu k serazeni puvodniho retezce: 683
+; Pocet cyklu k serazeni puvodniho retezce: 677
 ; Pocet cyklu razeni sestupne serazeneho retezce: 1232
 ; Pocet cyklu razeni vzestupne serazeneho retezce: 223
 ; Pocet cyklu razeni retezce s vasim loginem: 251
@@ -90,17 +90,32 @@ insert_double:
 ; insert_double_last301:
         sb $a0, login($v1)
         sb $a1, login($v0)
-        j inner_end
+
+        lb $a0, login($s0)
+        daddi $s2, $s0, -1
+        daddi $s3, $s1, 0
+        bnez $a0, outer
+        j main_end
 insert_double_last021:
         sb $a0, login($zero)
         sb $a2, login($v1)
         sb $a1, login($v0)
-        j inner_end
+
+        lb $a0, login($s0)
+        daddi $s2, $s0, -1
+        daddi $s3, $s1, 0
+        bnez $a0, outer
+        j main_end
 insert_double_last012:
         sb $a0, login($zero)
         sb $a1, login($v1)
         sb $a2, login($v0)
-        j inner_end
+
+        lb $a0, login($s0)
+        daddi $s2, $s0, -1
+        daddi $s3, $s1, 0
+        bnez $a0, outer
+        j main_end
 
 insert_double_last:
         sltu $t1, $a0, $a3
@@ -112,17 +127,32 @@ insert_double_last:
 ; insert_double_last201:
         sb $a0, login($v1)
         sb $a1, login($v0)
-        j inner_end
+
+        lb $a0, login($s0)
+        daddi $s2, $s0, -1
+        daddi $s3, $s1, 0
+        bnez $a0, outer
+        j main_end
 insert_double_last031:
         sb $a0, login($zero)
         sb $a3, login($v1)
         sb $a1, login($v0)
-        j inner_end
+
+        lb $a0, login($s0)
+        daddi $s2, $s0, -1
+        daddi $s3, $s1, 0
+        bnez $a0, outer
+        j main_end
 insert_double_last013:
         sb $a0, login($zero)
         sb $a1, login($v1)
         sb $a3, login($v0)
-        j inner_end
+
+        lb $a0, login($s0)
+        daddi $s2, $s0, -1
+        daddi $s3, $s1, 0
+        bnez $a0, outer
+        j main_end
 
 insert_single_prep3:
         sb $a1, login($s3)
@@ -162,28 +192,47 @@ insert_single2:
         beq $t0, $v1, insert_single_last02
 
         sb $a0, login($v1)
-        j inner_end
+
+        lb $a0, login($s0)
+        daddi $s2, $s0, -1
+        daddi $s3, $s1, 0
+        bnez $a0, outer
+        j main_end
 insert_single_last02:
         sb $a0, login($zero)
         sb $a2, login($v1)
-        j inner_end
+
+        lb $a0, login($s0)
+        daddi $s2, $s0, -1
+        daddi $s3, $s1, 0
+        bnez $a0, outer
+        j main_end
 
 insert_single_last:
         beq $t0, $v1, insert_single_last03
 
         sb $a0, login($v1)
-        j inner_end
+
+        lb $a0, login($s0)
+        daddi $s2, $s0, -1
+        daddi $s3, $s1, 0
+        bnez $a0, outer
+        j main_end
 insert_single_last03:
         sb $a0, login($zero)
         sb $a3, login($v1)
-        j inner_end
+
+        lb $a0, login($s0)
+        daddi $s2, $s0, -1
+        daddi $s3, $s1, 0
+        bnez $a0, outer
+        j main_end
 
 inner_single_end:
         daddi $s0, $s0, 2
         daddi $s1, $s1, 2
         sb $a0, login($s3)
 
-inner_end:
         lb $a0, login($s0)
         daddi $s2, $s0, -1
         daddi $s3, $s1, 0
