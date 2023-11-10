@@ -26,12 +26,14 @@ int main(void) {
 
         // ; Insert sort
 
+        // ; The basic idea is insert sort, but insert two items at the same time.
+
         // ; List of used registers and their usage/meaning:
-        // ; s0:     index of first unsorted item
-        // ; s1, s2: indexes
-        // ; a0:     inserted item
-        // ; a1, a2: items from login
-        // ; t0:     temorary (used in conditions)
+        // ; s0, s1: index of first 2 unsorted items
+        // ; s2, s3: indexes in the inner loops
+        // ; a0, a1: ordered items to insert
+        // ; a2, a3: items from login
+        // ; t0, t1: temorary (used in conditions)
         // ; v1:     1
         // ; v0:     2
         a0 = login[zero]; // lb $a0, login($zero)
@@ -83,68 +85,76 @@ insert_double:
 
 // ; insert_double_last:
         t1 = a0 < a2; // sltu $t1, $a0, $a2
-        s2 = s0 + -1; // daddi $s2, $s0, -1
+        s0 = s0 + 2; // daddi $s0, $s0, 2
+        s1 = s1 + 2; // daddi $s1, $s1, 2
         if (t0 == v1) goto insert_double_last012; // beq $t0, $v1, insert_double_last012
 
         if (t1 == v1) goto insert_double_last021; // beq $t1, $v1, insert_double_last021
 
 // ; insert_double_last301:
         login[v1] = a0; // sb $a0, login($v1)
-        a0 = login[s0]; // lb $a0, login($s0)
         login[v0] = a1; // sb $a1, login($v0)
 
+        a0 = login[s0]; // lb $a0, login($s0)
+        s2 = s0 + -1; // daddi $s2, $s0, -1
         s3 = s1 + 0; // daddi $s3, $s1, 0
         if (a0 != 0) goto outer; // bnez $a0, outer
         goto main_end; // j main_end
 insert_double_last021:
         login[zero] = a0; // sb $a0, login($zero)
         login[v1] = a2; // sb $a2, login($v1)
-        a0 = login[s0]; // lb $a0, login($s0)
         login[v0] = a1; // sb $a1, login($v0)
 
+        a0 = login[s0]; // lb $a0, login($s0)
+        s2 = s0 + -1; // daddi $s2, $s0, -1
         s3 = s1 + 0; // daddi $s3, $s1, 0
         if (a0 != 0) goto outer; // bnez $a0, outer
         goto main_end; // j main_end
 insert_double_last012:
         login[zero] = a0; // sb $a0, login($zero)
         login[v1] = a1; // sb $a1, login($v1)
-        a0 = login[s0]; // lb $a0, login($s0)
         login[v0] = a2; // sb $a2, login($v0)
 
+        a0 = login[s0]; // lb $a0, login($s0)
+        s2 = s0 + -1; // daddi $s2, $s0, -1
         s3 = s1 + 0; // daddi $s3, $s1, 0
         if (a0 != 0) goto outer; // bnez $a0, outer
         goto main_end; // j main_end
 
 insert_double_last:
         t1 = a0 < a3; // sltu $t1, $a0, $a3
-        s2 = s0 + -1; // daddi $s2, $s0, -1
+        s0 = s0 + 2; // daddi $s0, $s0, 2
+        s1 = s1 + 2; // daddi $s1, $s1, 2
         if (t0 == v1) goto insert_double_last013; // beq $t0, $v1, insert_double_last013
 
         if (t1 == v1) goto insert_double_last031; // beq $t1, $v1, insert_double_last031
 
 // ; insert_double_last201:
         login[v1] = a0; // sb $a0, login($v1)
-        a0 = login[s0]; // lb $a0, login($s0)
         login[v0] = a1; // sb $a1, login($v0)
 
+        a0 = login[s0]; // lb $a0, login($s0)
+        s2 = s0 + -1; // daddi $s2, $s0, -1
         s3 = s1 + 0; // daddi $s3, $s1, 0
         if (a0 != 0) goto outer; // bnez $a0, outer
         goto main_end; // j main_end
 insert_double_last031:
         login[zero] = a0; // sb $a0, login($zero)
         login[v1] = a3; // sb $a3, login($v1)
-        a0 = login[s0]; // lb $a0, login($s0)
         login[v0] = a1; // sb $a1, login($v0)
 
+        a0 = login[s0]; // lb $a0, login($s0)
+        s2 = s0 + -1; // daddi $s2, $s0, -1
         s3 = s1 + 0; // daddi $s3, $s1, 0
         if (a0 != 0) goto outer; // bnez $a0, outer
         goto main_end; // j main_end
 insert_double_last013:
         login[zero] = a0; // sb $a0, login($zero)
         login[v1] = a1; // sb $a1, login($v1)
-        a0 = login[s0]; // lb $a0, login($s0)
         login[v0] = a3; // sb $a3, login($v0)
 
+        a0 = login[s0]; // lb $a0, login($s0)
+        s2 = s0 + -1; // daddi $s2, $s0, -1
         s3 = s1 + 0; // daddi $s3, $s1, 0
         if (a0 != 0) goto outer; // bnez $a0, outer
         goto main_end; // j main_end
@@ -184,6 +194,8 @@ insert_single2:
         if (s3 != v1) goto insert_single; // bne $s3, $v1, insert_single
 
 // ; insert_single_last:
+        s0 = s0 + 2; // daddi $s0, $s0, 2
+        s1 = s1 + 2; // daddi $s1, $s1, 2
         if (t0 == v1) goto insert_single_last02; // beq $t0, $v1, insert_single_last02
 
         login[v1] = a0; // sb $a0, login($v1)

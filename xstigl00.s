@@ -3,15 +3,16 @@
 ; Pocet cyklu razeni sestupne serazeneho retezce: 688
 ; Pocet cyklu razeni vzestupne serazeneho retezce: 211
 ; Pocet cyklu razeni retezce s vasim loginem: 165
-; Implementovany radici algoritmus: Insert sort 
+; Implementovany radici algoritmus: Insert sort
 ; ------------------------------------------------
 
 ; DATA SEGMENT
                 .data
+login:          .asciiz "abcdefg"    ; puvodni uvitaci retezec
 ; login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
 ; login:          .asciiz "vvttpnjiiee3220---"  ; sestupne serazeny retezec
 ; login:          .asciiz "---0223eeiijnpttvv"  ; vzestupne serazeny retezec
-login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
+; login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
                                                 ; A POUZE S TIMTO ODEVZDEJTE
 
 params_sys5:    .space  8   ; misto pro ulozeni adresy pocatku
@@ -25,12 +26,14 @@ main:
 
         ; Insert sort
 
+        ; The basic idea is insert sort, but insert two items at the same time.
+
         ; List of used registers and their usage/meaning:
-        ; s0:     index of first unsorted item
-        ; s1, s2: indexes
-        ; a0:     inserted item
-        ; a1, a2: items from login
-        ; t0:     temorary (used in conditions)
+        ; s0, s1: index of first 2 unsorted items
+        ; s2, s3: indexes in the inner loops
+        ; a0, a1: ordered items to insert
+        ; a2, a3: items from login
+        ; t0, t1: temorary (used in conditions)
         ; v1:     1
         ; v0:     2
         lb $a0, login($zero)
