@@ -76,6 +76,7 @@ insert_double:
         daddi $s0, $s0, 2
         daddi $s1, $s1, 2
 
+        ; nop
         daddi $s2, $s0, -1
         daddi $s3, $s1, 0
         lb $a0, login($s0)
@@ -108,6 +109,7 @@ insert_single:
         daddi $s0, $s0, 2
         daddi $s1, $s1, 2
 
+        ; nop
         daddi $s2, $s0, -1
         daddi $s3, $s1, 0
         lb $a0, login($s0)
@@ -121,6 +123,7 @@ inner_end:
         daddi $s0, $s0, 2
         daddi $s1, $s1, 2
 
+        ; nop
         daddi $s2, $s0, -1
         daddi $s3, $s1, 0
         lb $a0, login($s0)
