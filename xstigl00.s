@@ -39,14 +39,14 @@ main:
         ; nop
         ; nop
         beqz $a0, main_end
-
-outer:
         daddi $s2, $s0, -1
         daddi $s3, $s1, 0
         lb $a0, login($s0)
         ; nop
         ; nop
         beqz $a0, main_end
+
+outer:
         lb $a1, login($s1)
         ; nop
         ; nop
@@ -77,7 +77,14 @@ insert_double:
         sb $a1, login($v1)
         daddi $s0, $s0, 2
         daddi $s1, $s1, 2
-        j outer
+
+        daddi $s2, $s0, -1
+        daddi $s3, $s1, 0
+        lb $a0, login($s0)
+        ; nop
+        ; nop
+        bnez $a0, outer
+        j main_end
 
 insert_single_prep:
         sb $a1, login($s3)
@@ -102,13 +109,26 @@ insert_single:
         sb $a0, login($zero)
         daddi $s0, $s0, 2
         daddi $s1, $s1, 2
-        j outer
+
+        daddi $s2, $s0, -1
+        daddi $s3, $s1, 0
+        lb $a0, login($s0)
+        ; nop
+        ; nop
+        bnez $a0, outer
+        j main_end
 
 inner_end:
         sb $a0, login($s3)
         daddi $s0, $s0, 2
         daddi $s1, $s1, 2
-        j outer
+
+        daddi $s2, $s0, -1
+        daddi $s3, $s1, 0
+        lb $a0, login($s0)
+        ; nop
+        ; nop
+        bnez $a0, outer
 
 main_end:
         ; all sorted print result and exit
