@@ -1,5 +1,5 @@
 ; Autor reseni: Jakub Antonín Štigler xstigl00
-; Pocet cyklu k serazeni puvodniho retezce: 897
+; Pocet cyklu k serazeni puvodniho retezce: 782
 ; Pocet cyklu razeni sestupne serazeneho retezce: 1232
 ; Pocet cyklu razeni vzestupne serazeneho retezce: 223
 ; Pocet cyklu razeni retezce s vasim loginem: 251
@@ -55,14 +55,16 @@ main:
 
 outer:
         lb $a1, login($s1)
-        ; nop
-        ; nop
+
+        lb $a2, login($s2);
+        daddi $s2, $s2, -1;
+
         beqz $a1, single_prep
         sltu $t1, $a1, $a0
-        lb $a2, login($s2)
-        daddi $s2, $s2, -1
+
+        sltu $t0, $a1, $a2;
+
         ; nop
-        sltu $t0, $a1, $a2
         beqz $t1, insert_double
         lb $a1, login($s0)
         lb $a0, login($s1)
@@ -76,7 +78,7 @@ insert_double:
         sltu $t0, $a1, $a3
         beq $s3, $v0, insert_double_last
 
-        beqz $t0, insert_single_prep
+        beqz $t0, insert_single_prep3
         lb $a2, login($s2)
         sb $a3, login($s3)
         daddi $s3, $s3, -1
@@ -142,38 +144,30 @@ insert_double_last012:
         sb $a2, login($v0)
         j inner_end
 
+insert_single_prep3:
+        daddi $a2, $a3, 0
 insert_single_prep:
-        daddi $s2, $s2, 1
         sb $a1, login($s3)
 single_prep:
+        sltu $t0, $a0, $a2;
         daddi $s3, $s3, -1
 
 insert_single:
-        lb $a2, login($s2)
-        ; nop
-        ; nop
-        sltu $t0, $a0, $a2
-        ; nop
-        ; nop
         beqz $t0, inner_single_end
-        sb $a2, login($s3)
-        daddi $s2, $s2, -1
-        daddi $s3, $s3, -1
-        ; nop
-        beqz $s2, insert_single_last
-
         lb $a3, login($s2)
-        ; nop
-        ; nop
-        sltu $t0, $a0, $a3
-        ; nop
-        ; nop
-        beqz $t0, inner_single_end
-        sb $a3, login($s3)
-        daddi $s2, $s2, -1
+        sb $a2, login($s3)
         daddi $s3, $s3, -1
-        ; nop
-        bnez $s2, insert_single
+        daddi $s2, $s2, -1
+        sltu $t0, $a0, $a3
+        beq $s3, $v1, insert_single_last
+
+        beqz $t0, inner_single_end
+        lb $a2, login($s2)
+        sb $a3, login($s3)
+        daddi $s3, $s3, -1
+        daddi $s2, $s2, -1
+        sltu $t0, $a0, $a2
+        bne $s3, $v1, insert_single
 
 ; insert_single_last:
         lb $a3, login($zero)
