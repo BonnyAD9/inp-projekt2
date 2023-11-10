@@ -39,17 +39,17 @@ int main(void) {
         if (a0 == 0) goto main_end; // beqz $a0, main_end
 
 outer:
+        s2 = s0 + -1; // daddi $s2, $s0, -1
+        s3 = s1 + 0; // daddi $s3, $s1, 0
         a0 = login[s0]; // lb $a0, login($s0)
         if (a0 == 0) goto main_end; // beqz $a0, main_end
         a1 = login[s1]; // lb $a1, login($s1)
         if (a1 == 0) goto single_prep; // beqz $a1, single_prep
         t0 = a1 < a0; // sltu $t0, $a1, $a0
-        if (t0 == 0) goto no_swap; // beqz $t0, no_swap
+        if (t0 == 0) goto insert_double; // beqz $t0, no_swap
         a1 = login[s0]; // lb $a1, login($s0)
         a0 = login[s1]; // lb $a0, login($s1)
-no_swap:
-        s2 = s0 + -1; // daddi $s2, $s0, -1
-        s3 = s1 + 0; // daddi $s3, $s1, 0
+
 insert_double:
         a2 = login[s2]; // lb $a2, login($s2)
         t0 = a1 < a2; // sltu $t0, $a1, $a2

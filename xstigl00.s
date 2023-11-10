@@ -8,10 +8,10 @@
 
 ; DATA SEGMENT
                 .data
-login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
+; login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
 ; login:          .asciiz "vvttpnjiiee3220---"  ; sestupne serazeny retezec
 ; login:          .asciiz "---0223eeiijnpttvv"  ; vzestupne serazeny retezec
-; login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
+login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
                                                 ; A POUZE S TIMTO ODEVZDEJTE
 
 params_sys5:    .space  8   ; misto pro ulozeni adresy pocatku
@@ -39,17 +39,17 @@ main:
         beqz $a0, main_end
 
 outer:
+        daddi $s2, $s0, -1
+        daddi $s3, $s1, 0
         lb $a0, login($s0)
         beqz $a0, main_end
         lb $a1, login($s1)
         beqz $a1, single_prep
         sltu $t0, $a1, $a0
-        beqz $t0, no_swap
+        beqz $t0, insert_double
         lb $a1, login($s0)
         lb $a0, login($s1)
-no_swap:
-        daddi $s2, $s0, -1
-        daddi $s3, $s1, 0
+
 insert_double:
         lb $a2, login($s2)
         sltu $t0, $a1, $a2
