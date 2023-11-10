@@ -33,17 +33,15 @@ main:
         ; t0:     temorary (used in conditions)
         ; v1:     1
         ; v0:     2
+        lb $a0, login($zero)
         daddi $v1, $zero, 1
         daddi $v0, $zero, 2
-        lb $a0, login($zero)
+        beqz $a0, main_end
         daddi $s0, $zero, 2
         daddi $s1, $zero, 3
-        beqz $a0, main_end
+        lb $a1, login($v1)
         daddi $s2, $zero, 1
         daddi $s3, $zero, 3
-        lb $a1, login($v1)
-        ; nop
-        ; nop
         beqz $a1, main_end
 
         sltu $t0, $a1, $a0
