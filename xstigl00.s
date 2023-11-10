@@ -8,10 +8,10 @@
 
 ; DATA SEGMENT
                 .data
-; login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
+login:          .asciiz "vitejte-v-inp-2023"    ; puvodni uvitaci retezec
 ; login:          .asciiz "vvttpnjiiee3220---"  ; sestupne serazeny retezec
 ; login:          .asciiz "---0223eeiijnpttvv"  ; vzestupne serazeny retezec
-login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
+; login:          .asciiz "xstigl00"            ; SEM DOPLNTE VLASTNI LOGIN
                                                 ; A POUZE S TIMTO ODEVZDEJTE
 
 params_sys5:    .space  8   ; misto pro ulozeni adresy pocatku
@@ -36,27 +36,40 @@ main:
         daddi $s1, $zero, 2
         daddi $v1, $zero, 1
         lb $a0, login($zero)
+        ; nop
+        ; nop
         beqz $a0, main_end
 
 outer:
         daddi $s2, $s0, -1
         daddi $s3, $s1, 0
         lb $a0, login($s0)
+        ; nop
+        ; nop
         beqz $a0, main_end
         lb $a1, login($s1)
+        ; nop
+        ; nop
         beqz $a1, single_prep
         sltu $t0, $a1, $a0
+        ; nop
+        ; nop
         beqz $t0, insert_double
         lb $a1, login($s0)
         lb $a0, login($s1)
 
 insert_double:
         lb $a2, login($s2)
+        ; nop
+        ; nop
         sltu $t0, $a1, $a2
+        ; nop
+        ; nop
         beqz $t0, insert_single_prep
         sb $a2, login($s3)
         daddi $s2, $s2, -1
         daddi $s3, $s3, -1
+        ; nop
         bgez $s2, insert_double
 
 ; inner_insert_double_end:
@@ -73,11 +86,16 @@ single_prep:
 
 insert_single:
         lb $a2, login($s2)
+        ; nop
+        ; nop
         sltu $t0, $a0, $a2
+        ; nop
+        ; nop
         beqz $t0, inner_end
         sb $a2, login($s3)
         daddi $s2, $s2, -1
         daddi $s3, $s3, -1
+        ; nop
         bgez $s2, insert_single
 
 ; inner_insert_single_end:
