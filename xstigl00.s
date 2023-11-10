@@ -70,6 +70,7 @@ outer:
 insert_double:
         daddi $s2, $s2, -1
         beqz $t0, insert_single_prep
+        ; nop
         lb $a3, login($s2)
         sb $a2, login($s3)
         daddi $s3, $s3, -1
@@ -78,6 +79,7 @@ insert_double:
 
         daddi $s2, $s2, -1
         beqz $t0, insert_single_prep
+        ; nop
         lb $a2, login($s2)
         sb $a3, login($s3)
         daddi $s3, $s3, -1
