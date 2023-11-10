@@ -82,37 +82,34 @@ insert_double:
 
 ; insert_double_last:
         sltu $t1, $a0, $a2
+        daddi $s2, $s0, -1
         beq $t0, $v1, insert_double_last012
 
-        ; nop
         beq $t1, $v1, insert_double_last021
 
 ; insert_double_last301:
         sb $a0, login($v1)
+        lb $a0, login($s0)
         sb $a1, login($v0)
 
-        lb $a0, login($s0)
-        daddi $s2, $s0, -1
         daddi $s3, $s1, 0
         bnez $a0, outer
         j main_end
 insert_double_last021:
         sb $a0, login($zero)
         sb $a2, login($v1)
+        lb $a0, login($s0)
         sb $a1, login($v0)
 
-        lb $a0, login($s0)
-        daddi $s2, $s0, -1
         daddi $s3, $s1, 0
         bnez $a0, outer
         j main_end
 insert_double_last012:
         sb $a0, login($zero)
         sb $a1, login($v1)
+        lb $a0, login($s0)
         sb $a2, login($v0)
 
-        lb $a0, login($s0)
-        daddi $s2, $s0, -1
         daddi $s3, $s1, 0
         bnez $a0, outer
         j main_end
