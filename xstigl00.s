@@ -47,6 +47,8 @@ main:
         beqz $a1, main_end
 
         sltu $t0, $a1, $a0
+        ; nop
+        ; nop
         beqz $t0, outer
         sb $a0, login($v1)
         sb $a1, login($zero)
@@ -92,10 +94,16 @@ insert_double:
 
 ; insert_double_last:
         lb $a3, login($zero)
+        ; nop
+        ; nop
         sltu $t0, $a1, $a3
+        ; nop
+        ; nop
         beq $t0, $v1, insert_double_last013
 
         sltu $t0, $a0, $a3
+        ; nop
+        ; nop
         beq $t0, $v1, insert_double_last031
 
 ; insert_double_last301:
@@ -115,10 +123,16 @@ insert_double_last013:
 
 insert_double_last:
         lb $a2, login($zero)
+        ; nop
+        ; nop
         sltu $t0, $a1, $a2
+        ; nop
+        ; nop
         beq $t0, $v1, insert_double_last012
 
         sltu $t0, $a0, $a2
+        ; nop
+        ; nop
         beq $t0, $v1, insert_double_last021
 
 ; insert_double_last201:
@@ -170,7 +184,11 @@ insert_single:
 
 ; insert_single_last:
         lb $a3, login($zero)
+        ; nop
+        ; nop
         sltu $t0, $a0, $a3
+        ; nop
+        ; nop
         beq $t0, $v1, insert_single_last03
 
         sb $a0, login($v1)
@@ -182,7 +200,11 @@ insert_single_last03:
 
 insert_single_last:
         lb $a2, login($zero)
+        ; nop
+        ; nop
         sltu $t0, $a0, $a2
+        ; nop
+        ; nop
         beq $t0, $v1, insert_single_last02
 
         sb $a0, login($v1)
