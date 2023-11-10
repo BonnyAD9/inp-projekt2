@@ -93,10 +93,10 @@ insert_double:
 ; insert_double_last:
         lb $a3, login($zero)
         sltu $t0, $a1, $a3
-        beq $t0, $v1, insert_double_last012
+        beq $t0, $v1, insert_double_last013
 
         sltu $t0, $a0, $a3
-        beq $t0, $v1, insert_double_last021
+        beq $t0, $v1, insert_double_last031
 
 ; insert_double_last301:
         sb $a0, login($v1)
@@ -155,18 +155,30 @@ insert_single:
         ; nop
         beqz $s2, insert_single_last
 
-        lb $a2, login($s2)
+        lb $a3, login($s2)
         ; nop
         ; nop
-        sltu $t0, $a0, $a2
+        sltu $t0, $a0, $a3
         ; nop
         ; nop
         beqz $t0, inner_single_end
-        sb $a2, login($s3)
+        sb $a3, login($s3)
         daddi $s2, $s2, -1
         daddi $s3, $s3, -1
         ; nop
         bnez $s2, insert_single
+
+; insert_single_last:
+        lb $a3, login($zero)
+        sltu $t0, $a0, $a3
+        beq $t0, $v1, insert_single_last03
+
+        sb $a0, login($v1)
+        j inner_end
+insert_single_last03:
+        sb $a0, login($zero)
+        sb $a3, login($v1)
+        j inner_end
 
 insert_single_last:
         lb $a2, login($zero)
