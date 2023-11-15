@@ -59,36 +59,40 @@ outer:
         sltu $t0, $a1, $a0
         ; nop
         ; nop
-        beqz $t0, insert_double
+        beqz $t0, insert_double_prep
         lb $a1, login($s0)
         lb $a0, login($s1)
 
+insert_double_prep:
+        and $t0, $s2, $v1
+        bnez $t0, insert_double
+        lb $a2, login($s2)
+        sltu $t0, $a1, $a2
+        beqz $t0, insert_single_prep
+        sb $a2, login($s3)
+        daddi $s2, $s2, -1
+        daddi $s3, $s3, -1
+
 insert_double:
         lb $a2, login($s2)
-        ; nop
-        ; nop
         sltu $t0, $a1, $a2
-        ; nop
-        ; nop
         beqz $t0, insert_single_prep
+
         sb $a2, login($s3)
         daddi $s2, $s2, -1
         daddi $s3, $s3, -1
-        ; nop
-        beqz $s2, insert_double_last
 
         lb $a2, login($s2)
-        ; nop
-        ; nop
         sltu $t0, $a1, $a2
-        ; nop
-        ; nop
         beqz $t0, insert_single_prep
+
         sb $a2, login($s3)
+
         daddi $s2, $s2, -1
         daddi $s3, $s3, -1
-        ; nop
         bnez $s2, insert_double
+
+        j inner_end
 
 insert_double_last:
         lb $a2, login($zero)
@@ -117,33 +121,38 @@ insert_single_prep:
         sb $a1, login($s3)
 single_prep:
         daddi $s3, $s3, -1
+        daddi $s4, $s2, -1
 
+insert_single_cmp:
+        and $t0, $s2, $v1
+        bnez $t0, insert_single_jmp
+        lb $a2, login($s2)
+        sltu $t0, $a0, $a2
+        beqz $t0, insert_single_end3
+        sb $a2, login($s3)
+        daddi $s2, $s2, -1
+        daddi $s3, $s3, -1
+
+insert_single_jmp:
+        slt $t0, $s2, $zero
+        beq $t0, $v1, insert_single_last
 insert_single:
         lb $a2, login($s2)
-        ; nop
-        ; nop
         sltu $t0, $a0, $a2
-        ; nop
-        ; nop
-        beqz $t0, inner_single_end
-        sb $a2, login($s3)
-        daddi $s2, $s2, -1
-        daddi $s3, $s3, -1
-        ; nop
-        beqz $s2, insert_single_last
+        beqz $t0, insert_single_end3
 
-        lb $a2, login($s2)
-        ; nop
-        ; nop
-        sltu $t0, $a0, $a2
-        ; nop
-        ; nop
-        beqz $t0, inner_single_end
         sb $a2, login($s3)
-        daddi $s2, $s2, -1
-        daddi $s3, $s3, -1
-        ; nop
-        bnez $s2, insert_single
+
+        lb $a2, login($s4)
+        sltu $t0, $a0, $a2
+        beqz $t0, insert_single_end2
+
+        sb $a2, login($s2)
+
+        daddi $s4, $s4, -2
+        daddi $s2, $s2, -2
+        daddi $s3, $s3, -2
+        bgez $s4, insert_single
 
 insert_single_last:
         lb $a2, login($zero)
@@ -154,16 +163,20 @@ insert_single_last:
         j inner_end
 insert_single_last02:
         sb $a0, login($zero)
-        sb $a3, login($v1)
+        sb $a2, login($v1)
         j inner_end
 
-inner_single_end:
+insert_single_end3:
         sb $a0, login($s3)
-        daddi $s0, $s0, 2
-        daddi $s1, $s1, 2
+        j inner_end
+
+insert_single_end2:
+        sb $a0, login($s2)
 
         ; nop
 inner_end:
+        daddi $s0, $s0, 2
+        daddi $s1, $s1, 2
         daddi $s2, $s0, -1
         daddi $s3, $s1, 0
         lb $a0, login($s0)
