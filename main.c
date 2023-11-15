@@ -23,6 +23,16 @@ int main(void) {
 
 
 
+        // ; Insert sort
+
+        // ; List of used registers and their usage/meaning:
+        // ; s0:     index of first unsorted item
+        // ; s1, s2: indexes
+        // ; a0:     inserted item
+        // ; a1, a2: items from login
+        // ; t0:     temorary (used in conditions)
+        // ; v1:     1
+        // ; v0:     2
         v1 = zero + 1; // daddi $v1, $zero, 1
         v0 = zero + 2; // daddi $v0, $zero, 2
         a0 = login[zero]; // lb $a0, login($zero)
@@ -58,7 +68,7 @@ insert_double_prep:
         if (t0 != 0) goto insert_double_jmp; // bnez $t0, insert_double_jmp
         a2 = login[s2]; // lb $a2, login($s2)
         t0 = a1 < a2; // sltu $t0, $a1, $a2
-        if (t0 == 0) goto insert_single_prep; // beqz $t0, insert_single_prep
+        if (t0 == 0) goto insert_single_prep2; // beqz $t0, insert_single_prep2
         login[s3] = a2; // sb $a2, login($s3)
         s2 = s2 + -1; // daddi $s2, $s2, -1
         s3 = s3 + -1; // daddi $s3, $s3, -1
@@ -66,11 +76,11 @@ insert_double_prep:
 insert_double_jmp:
         s4 = s2 + -1; // daddi $s4, $s2, -1
         s5 = s3 + -1; // daddi $s5, $s3, -1
-
+        // ; s2 s4 s3 s5
 insert_double:
         a2 = login[s2]; // lb $a2, login($s2)
         t0 = a1 < a2; // sltu $t0, $a1, $a2
-        if (t0 == 0) goto insert_single_prep; // beqz $t0, insert_single_prep
+        if (t0 == 0) goto insert_single_prep2; // beqz $t0, insert_single_prep2
 
         login[s3] = a2; // sb $a2, login($s3)
 
@@ -80,21 +90,49 @@ insert_double:
 
         login[s5] = a2; // sb $a2, login($s5)
 
-        s2 = s2 + -2; // daddi $s2, $s2, -2
         s3 = s3 + -2; // daddi $s3, $s3, -2
-        s4 = s4 + -2; // daddi $s4, $s4, -2
         s5 = s5 + -2; // daddi $s5, $s5, -2
-        if (s2 != 0) goto insert_double; // bnez $s2, insert_double
+        if (s3 == v0) goto insert_double; // beq $s3, $v0, insert_double
+
+        a2 = login[s3]; // lb $a2, login($s3)
+        t0 = a1 < a2; // sltu $t0, $a1, $a2
+        if (t0 == 0) goto insert_single_prep3; // beqz $t0, insert_single_prep3
+
+        login[s2] = a2; // sb $a2, login($s2)
+
+        a2 = login[s5]; // lb $a2, login($s5)
+        t0 = a1 < a2; // sltu $t0, $a1, $a2
+        if (t0 == 0) goto insert_single_prep5; // beqz $t0, insert_single_prep5
+
+        login[s4] = a2; // sb $a2, login($s4)
+
+        s2 = s2 + -2; // daddi $s2, $s2, -2
+        s4 = s4 + -2; // daddi $s4, $s4, -2
+        if (s2 != v0) goto insert_double; // bne $s2, $v0, insert_double
 
         goto inner_end; // j inner_end
 
 insert_single_prep4:
         login[s5] = a1; // sb $a1, login($s5)
-        s3 = s5 - 1; // daddi $s3, $s5, 0
+        s3 = s5 + -1; // daddi $s3, $s5, -1
         s2 = s4 + 0; // daddi $s2, $s4, 0
         s4 = s4 + -1; // daddi $s4, $s4, -1
         goto insert_single_cmp; // j insert_single_cmp
-insert_single_prep:
+
+insert_single_prep5:
+        login[s5] = a1; // sb $a1, login($s5)
+        s3 = s4 + -1; // daddi $s3, $s4, -1
+        s2 = s5 + 0; // daddi $s2, $s5, 0
+        s4 = s5 + -1; // daddi $s4, $s5, -1
+        goto insert_single_cmp; // j insert_single_cmp
+
+insert_single_prep3:
+        login[s5] = a1; // sb $a1, login($s5)
+        s3 = s2 + -1; // daddi $s3, $s2, -1
+        s2 = s3 + 0; // daddi $s2, $s3, 0
+        s4 = s3 + -1; // daddi $s4, $s3, -1
+        goto insert_single_cmp; // j insert_single_cmp
+insert_single_prep2:
         login[s3] = a1; // sb $a1, login($s3)
 single_prep:
         s3 = s3 + -1; // daddi $s3, $s3, -1
