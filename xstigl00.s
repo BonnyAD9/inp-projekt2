@@ -94,29 +94,6 @@ insert_double:
 
         j inner_end
 
-insert_double_last:
-        lb $a2, login($zero)
-        sltu $t0, $a1, $a2
-        beq $t0, $v1, insert_double_last012
-
-        sltu $t0, $a0, $a2
-        beq $t0, $v1, insert_double_last021
-
-; insert_double_last201:
-        sb $a0, login($v1)
-        sb $a1, login($v0)
-        j inner_end
-insert_double_last021:
-        sb $a0, login($zero)
-        sb $a2, login($v1)
-        sb $a1, login($v0)
-        j inner_end
-insert_double_last012:
-        sb $a0, login($zero)
-        sb $a1, login($v1)
-        sb $a2, login($v0)
-        j inner_end
-
 insert_single_prep:
         sb $a1, login($s3)
 single_prep:
@@ -132,10 +109,10 @@ insert_single_cmp:
         sb $a2, login($s3)
         daddi $s2, $s2, -1
         daddi $s3, $s3, -1
+        daddi $s4, $s4, -1
 
 insert_single_jmp:
-        slt $t0, $s2, $zero
-        beq $t0, $v1, insert_single_last
+        beqz $s3, insert_single_end3
 insert_single:
         lb $a2, login($s2)
         sltu $t0, $a0, $a2
@@ -153,17 +130,6 @@ insert_single:
         daddi $s2, $s2, -2
         daddi $s3, $s3, -2
         bgez $s4, insert_single
-
-insert_single_last:
-        lb $a2, login($zero)
-        sltu $t0, $a0, $a2
-        beq $t0, $v1, insert_single_last02
-
-        sb $a0, login($v1)
-        j inner_end
-insert_single_last02:
-        sb $a0, login($zero)
-        sb $a2, login($v1)
         j inner_end
 
 insert_single_end3:

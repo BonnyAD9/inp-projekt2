@@ -23,16 +23,6 @@ int main(void) {
 
 
 
-        // ; Insert sort
-
-        // ; List of used registers and their usage/meaning:
-        // ; s0:     index of first unsorted item
-        // ; s1, s2: indexes
-        // ; a0:     inserted item
-        // ; a1, a2: items from login
-        // ; t0:     temorary (used in conditions)
-        // ; v1:     1
-        // ; v0:     2
         v1 = zero + 1; // daddi $v1, $zero, 1
         v0 = zero + 2; // daddi $v0, $zero, 2
         a0 = login[zero]; // lb $a0, login($zero)
@@ -94,33 +84,11 @@ insert_double:
 
         goto inner_end; // j inner_end
 
-insert_double_last:
-        a2 = login[zero]; // lb $a2, login($zero)
-        t0 = a1 < a2; // sltu $t0, $a1, $a2
-        if (t0 == v1) goto insert_double_last012; // beq $t0, $v1, insert_double_last012
-
-        t0 = a0 < a2; // sltu $t0, $a0, $a2
-        if (t0 == v1) goto insert_double_last021; // beq $t0, $v1, insert_double_last021
-
-// ; insert_double_last201:
-        login[v1] = a0; // sb $a0, login($v1)
-        login[v0] = a1; // sb $a1, login($v0)
-        goto inner_end; // j inner_end
-insert_double_last021:
-        login[zero] = a0; // sb $a0, login($zero)
-        login[v1] = a2; // sb $a2, login($v1)
-        login[v0] = a1; // sb $a1, login($v0)
-        goto inner_end; // j inner_end
-insert_double_last012:
-        login[zero] = a0; // sb $a0, login($zero)
-        login[v1] = a1; // sb $a1, login($v1)
-        login[v0] = a2; // sb $a2, login($v0)
-        goto inner_end; // j inner_end
-
 insert_single_prep:
         login[s3] = a1; // sb $a1, login($s3)
 single_prep:
         s3 = s3 + -1; // daddi $s3, $s3, -1
+        s4 = s2 + -1; // daddi $s4, $s2, -1
 
 insert_single_cmp:
         t0 = s2 & v1; // and $t0, $s2, $v1
@@ -131,38 +99,27 @@ insert_single_cmp:
         login[s3] = a2; // sb $a2, login($s3)
         s2 = s2 + -1; // daddi $s2, $s2, -1
         s3 = s3 + -1; // daddi $s3, $s3, -1
+        s4 = s4 + -1; // daddi $s4, $s4, -1
 
 insert_single_jmp:
-        t0 = s2 < zero; // slt $t0, $s2, $zero
-        if (t0 == v1) goto insert_single_last; // beq $t0, $v1, insert_single_last
+        if (s3 == 0) goto insert_single_end3; // beqz $s3, inner_end
 insert_single:
         a2 = login[s2]; // lb $a2, login($s2)
         t0 = a0 < a2; // sltu $t0, $a0, $a2
         if (t0 == 0) goto insert_single_end3; // beqz $t0, insert_single_end3
 
         login[s3] = a2; // sb $a2, login($s3)
-        s2 = s2 + -1; // daddi $s2, $s2, -1
 
-        a2 = login[s2]; // lb $a2, login($s2)
+        a2 = login[s4]; // lb $a2, login($s4)
         t0 = a0 < a2; // sltu $t0, $a0, $a2
         if (t0 == 0) goto insert_single_end2; // beqz $t0, insert_single_end2
 
         login[s2] = a2; // sb $a2, login($s2)
 
-        s2 = s2 + -1; // daddi $s2, $s2, -1
+        s4 = s4 + -2; // daddi $s4, $s4, -2
+        s2 = s2 + -2; // daddi $s2, $s2, -2
         s3 = s3 + -2; // daddi $s3, $s3, -2
-        if (s2 != 0) goto insert_single; // bnez $s2, insert_single
-
-insert_single_last:
-        a2 = login[zero]; // lb $a2, login($zero)
-        t0 = a0 < a2; // sltu $t0, $a0, $a2
-        if (t0 == v1) goto insert_single_last02; // beq $t0, $v1, insert_single_last02
-
-        login[v1] = a0; // sb $a0, login($v1)
-        goto inner_end; // j inner_end
-insert_single_last02:
-        login[zero] = a0; // sb $a0, login($zero)
-        login[v1] = a2; // sb $a2, login($v1)
+        if (s4 >= 0) goto insert_single; // bgez $s4, insert_single
         goto inner_end; // j inner_end
 
 insert_single_end3:
