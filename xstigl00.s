@@ -68,7 +68,9 @@ insert_double_prep:
         bnez $t0, insert_double_jmp
         lb $a2, login($s2)
         sltu $t0, $a1, $a2
-        beqz $t0, insert_single_prep2
+        daddi $s4, $s2, 0
+        daddi $s5, $s3, 0
+        beqz $t0, insert_single_prep5
         sb $a2, login($s3)
         daddi $s2, $s2, -1
         daddi $s3, $s3, -1
@@ -124,19 +126,6 @@ insert_single_prep5:
         daddi $s3, $s4, -1
         daddi $s2, $s5, 0
         daddi $s4, $s5, -1
-        j insert_single_cmp
-
-insert_single_prep3:
-        sb $a1, login($s2)
-        daddi $s3, $s2, -1
-        daddi $s2, $s3, 0
-        daddi $s4, $s3, -1
-        j insert_single_cmp
-insert_single_prep2:
-        sb $a1, login($s3)
-single_prep:
-        daddi $s3, $s3, -1
-        daddi $s4, $s2, -1
 
 insert_single_cmp:
         and $t0, $s2, $v1
@@ -148,6 +137,19 @@ insert_single_cmp:
         daddi $s2, $s2, -1
         daddi $s3, $s3, -1
         daddi $s4, $s4, -1
+        j insert_single_jmp
+
+insert_single_prep3:
+        sb $a1, login($s2)
+        daddi $s3, $s2, -1
+        daddi $s2, $s3, 0
+        daddi $s4, $s3, -1
+        j insert_single_jmp
+insert_single_prep2:
+        sb $a1, login($s3)
+single_prep:
+        daddi $s3, $s3, -1
+        daddi $s4, $s2, -1
 
 insert_single_jmp:
         beqz $s3, insert_single_end3
