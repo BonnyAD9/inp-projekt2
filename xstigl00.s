@@ -47,6 +47,8 @@ main:
         beqz $a1, main_end
 
         sltu $t0, $a1, $a0
+        ; nop
+        ; nop
         beqz $t0, outer
         sb $a0, login($v1)
         sb $a1, login($zero)
@@ -65,8 +67,12 @@ outer:
 
 insert_double_prep:
         and $t0, $s2, $v1
+        ; nop
+        ; nop
         bnez $t0, insert_double_jmp
         lb $a2, login($s2)
+        ; nop
+        ; nop
         sltu $t0, $a1, $a2
         daddi $s4, $s2, 0
         daddi $s5, $s3, 0
@@ -75,41 +81,60 @@ insert_double_prep:
         daddi $s2, $s2, -1
         daddi $s3, $s3, -1
 
+        ; nop
 insert_double_jmp:
         daddi $s4, $s2, -1
         daddi $s5, $s3, -1
         ; s4 s2 s5 s3
 insert_double:
         lb $a2, login($s2)
+        ; nop
+        ; nop
         sltu $t0, $a1, $a2
+        ; nop
+        ; nop
         beqz $t0, insert_single_prep2
 
         sb $a2, login($s3)
 
         lb $a2, login($s4)
+        ; nop
+        ; nop
         sltu $t0, $a1, $a2
+        ; nop
+        ; nop
         beqz $t0, insert_single_prep4
 
         sb $a2, login($s5)
 
         daddi $s3, $s3, -4
         daddi $s5, $s5, -4
+        ; nop
         beq $s3, $zero, inner_end
 
         lb $a2, login($s3)
+        ; nop
+        ; nop
         sltu $t0, $a1, $a2
+        ; nop
+        ; nop
         beqz $t0, insert_single_prep3
 
         sb $a2, login($s2)
 
         lb $a2, login($s5)
+        ; nop
+        ; nop
         sltu $t0, $a1, $a2
+        ; nop
+        ; nop
         beqz $t0, insert_single_prep5
 
         sb $a2, login($s4)
 
         daddi $s2, $s2, -4
         daddi $s4, $s4, -4
+        ; nop
         bne $s2, $zero, insert_double
 
         j inner_end
@@ -127,11 +152,18 @@ insert_single_prep5:
         daddi $s2, $s5, 0
         daddi $s4, $s5, -1
 
+        ; nop
 insert_single_cmp:
         and $t0, $s2, $v1
+        ; nop
+        ; nop
         bnez $t0, insert_single_jmp
         lb $a2, login($s2)
+        ; nop
+        ; nop
         sltu $t0, $a0, $a2
+        ; nop
+        ; nop
         beqz $t0, insert_single_end3
         sb $a2, login($s3)
         daddi $s2, $s2, -1
@@ -151,17 +183,26 @@ single_prep:
         daddi $s3, $s3, -1
         daddi $s4, $s2, -1
 
+        ; nop
 insert_single_jmp:
         beqz $s3, insert_single_end3
 insert_single:
         lb $a2, login($s2)
+        ; nop
+        ; nop
         sltu $t0, $a0, $a2
+        ; nop
+        ; nop
         beqz $t0, insert_single_end3
 
         sb $a2, login($s3)
 
         lb $a2, login($s4)
+        ; nop
+        ; nop
         sltu $t0, $a0, $a2
+        ; nop
+        ; nop
         beqz $t0, insert_single_end2
 
         sb $a2, login($s2)
