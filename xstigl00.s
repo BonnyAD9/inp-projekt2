@@ -92,10 +92,8 @@ insert_double:
         ; nop
         sltu $t0, $a1, $a2
         sltu $t1, $a1, $a3
-        ; nop
-        beqz $t0, insert_single_prep2
-
         sb $a2, login($s3)
+        beqz $t0, insert_single_prep2
 
         beqz $t1, insert_single_prep4
 
@@ -110,10 +108,9 @@ insert_double:
         ; nop
         sltu $t0, $a1, $a2
         sltu $t1, $a1, $a3
-        ; nop
+        sb $a2, login($s2)
         beqz $t0, insert_single_prep3
 
-        sb $a2, login($s2)
 
         beqz $t1, insert_single_prep5
 
