@@ -88,54 +88,40 @@ insert_double_jmp:
         ; s4 s2 s5 s3
 insert_double:
         lb $a2, login($s2)
-        ; nop
+        lb $a3, login($s4)
         ; nop
         sltu $t0, $a1, $a2
-        ; nop
+        sltu $t1, $a1, $a3
         ; nop
         beqz $t0, insert_single_prep2
 
         sb $a2, login($s3)
 
-        lb $a2, login($s4)
-        ; nop
-        ; nop
-        sltu $t0, $a1, $a2
-        ; nop
-        ; nop
-        beqz $t0, insert_single_prep4
+        beqz $t1, insert_single_prep4
 
-        sb $a2, login($s5)
+        sb $a3, login($s5)
 
         daddi $s3, $s3, -4
         daddi $s5, $s5, -4
-        ; nop
-        beq $s3, $zero, inner_end
+        beq $s2, $v0, inner_end
 
         lb $a2, login($s3)
-        ; nop
+        lb $a3, login($s5)
         ; nop
         sltu $t0, $a1, $a2
-        ; nop
+        sltu $t1, $a1, $a3
         ; nop
         beqz $t0, insert_single_prep3
 
         sb $a2, login($s2)
 
-        lb $a2, login($s5)
-        ; nop
-        ; nop
-        sltu $t0, $a1, $a2
-        ; nop
-        ; nop
-        beqz $t0, insert_single_prep5
+        beqz $t1, insert_single_prep5
 
-        sb $a2, login($s4)
+        sb $a3, login($s4)
 
         daddi $s2, $s2, -4
         daddi $s4, $s4, -4
-        ; nop
-        bne $s2, $zero, insert_double
+        bne $s3, $v0, insert_double
 
         j inner_end
 
