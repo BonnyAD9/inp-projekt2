@@ -171,26 +171,17 @@ insert_single_jmp:
         beqz $s3, insert_single_end3
 insert_single:
         lb $a2, login($s2)
-        ; nop
-        ; nop
+        lb $a3, login($s4)
+        daddi $s4, $s4, -2
         sltu $t0, $a0, $a2
-        ; nop
-        ; nop
+        sltu $t1, $a0, $a3
+        sb $a2, login($s3)
         beqz $t0, insert_single_end3
 
-        sb $a2, login($s3)
+        beqz $t1, insert_single_end2
 
-        lb $a2, login($s4)
-        ; nop
-        ; nop
-        sltu $t0, $a0, $a2
-        ; nop
-        ; nop
-        beqz $t0, insert_single_end2
+        sb $a3, login($s2)
 
-        sb $a2, login($s2)
-
-        daddi $s4, $s4, -2
         daddi $s2, $s2, -2
         daddi $s3, $s3, -2
         bgez $s4, insert_single
