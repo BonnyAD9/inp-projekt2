@@ -64,16 +64,17 @@ max_end:
         beq $s0, $v0, main_end
 
 outer:
-        daddi $s1, $s0, 0
         daddi $s2, $s0, 1
 
         lb $a0, login($s0)
 
-        daddi $s0, $s0, -1
-
         lb $a1, login($s2)
+        daddi $s1, $s0, 0
+        daddi $s0, $s0, -1
         sltu $t0, $a1, $a0
         daddi $s2, $s2, 1
+        ; nop
+        ; nop
         lb $a2, login($s2)
         beqz $t0, insert_end
 
