@@ -87,6 +87,16 @@ outer:
 insert:
         sb $a1, login($s1)
         daddi $s1, $s1, 1
+        lb $a2, login($s2)
+        ; nop
+        ; nop
+        sltu $t0, $a2, $a0
+        daddi $s2, $s2, 1
+        ; nop
+        beqz $t0, insert_end
+
+        sb $a2, login($s1)
+        daddi $s1, $s1, 1
         lb $a1, login($s2)
         ; nop
         ; nop
