@@ -38,12 +38,11 @@ main:
         beqz $a1, main_end
 max:
         slt $t0, $a1, $a0
-        ; nop
+        daddi $s0, $s0, 1
         ; nop
         bnez $t0, smaller
         sb $a0, login($s1)
         daddi $a0, $a1, 0
-        daddi $s0, $s0, 1
         daddi $s1, $s1, 1
         ; nop
         lb $a1, login($s0)
@@ -53,7 +52,6 @@ max:
         j max_end
 smaller:
         sb $a1, login($s1)
-        daddi $s0, $s0, 1
         daddi $s1, $s1, 1
         ; nop
         lb $a1, login($s0)
@@ -81,28 +79,22 @@ outer:
         lb $a1, login($s2)
         sltu $t0, $a1, $a0
         daddi $s2, $s2, 1
-        ; nop
+        lb $a2, login($s2)
         beqz $t0, insert_end
 
 insert:
         sb $a1, login($s1)
-        daddi $s1, $s1, 1
-        lb $a2, login($s2)
-        ; nop
-        ; nop
-        sltu $t0, $a2, $a0
         daddi $s2, $s2, 1
-        ; nop
+        sltu $t0, $a2, $a0
+        daddi $s1, $s1, 1
+        lb $a1, login($s2)
         beqz $t0, insert_end
 
         sb $a2, login($s1)
-        daddi $s1, $s1, 1
-        lb $a1, login($s2)
-        ; nop
-        ; nop
-        sltu $t0, $a1, $a0
         daddi $s2, $s2, 1
-        ; nop
+        sltu $t0, $a1, $a0
+        daddi $s1, $s1, 1
+        lb $a2, login($s2)
         bnez $t0, insert
 insert_end:
         sb $a0, login($s1)
