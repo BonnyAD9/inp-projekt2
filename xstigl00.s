@@ -26,54 +26,73 @@ main:
         ; Insert sort (improoved)
 
         daddi $s0, $zero, 1
-        daddi $v0, $zero, -1
         daddi $s1, $zero, 0
         lb $a0, login($zero)
+        ; nop
+        ; nop
         beqz $a0, main_end
 
         lb $a1, login($s0)
+        ; nop
+        ; nop
         beqz $a1, main_end
 max:
         slt $t0, $a1, $a0
+        ; nop
+        ; nop
         bnez $t0, smaller
         sb $a0, login($s1)
         daddi $a0, $a1, 0
         daddi $s0, $s0, 1
         daddi $s1, $s1, 1
+        ; nop
         lb $a1, login($s0)
+        ; nop
+        ; nop
         bnez $a1, max
         j max_end
 smaller:
         sb $a1, login($s1)
         daddi $s0, $s0, 1
         daddi $s1, $s1, 1
+        ; nop
         lb $a1, login($s0)
+        ; nop
+        ; nop
         bnez $a1, max
 
 max_end:
         sb $a0, login($s1)
         daddi $s0, $s0, -2
-
+        ; nop
+        ; nop
         beqz $s0, main_end
 
 outer:
         daddi $s0, $s0, -1
+        ; nop
+        ; nop
         lb $a0, login($s0)
 
         daddi $s1, $s0, 0
         daddi $s2, $s0, 1
-
+        ; nop
+        ; nop
         lb $a1, login($s2)
         sltu $t0, $a1, $a0
         daddi $s2, $s2, 1
+        ; nop
         beqz $t0, insert_end
 
 insert:
         sb $a1, login($s1)
         daddi $s1, $s1, 1
         lb $a1, login($s2)
+        ; nop
+        ; nop
         sltu $t0, $a1, $a0
         daddi $s2, $s2, 1
+        ; nop
         bnez $t0, insert
 insert_end:
         sb $a0, login($s1)
