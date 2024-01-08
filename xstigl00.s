@@ -43,19 +43,15 @@ max:
         bnez $t0, smaller
         sb $a0, login($s1)
         daddi $a0, $a1, 0
-        daddi $s1, $s1, 1
-        ; nop
         lb $a1, login($s0)
-        ; nop
+        daddi $s1, $s1, 1
         ; nop
         bnez $a1, max
         j max_end
 smaller:
         sb $a1, login($s1)
-        daddi $s1, $s1, 1
-        ; nop
         lb $a1, login($s0)
-        ; nop
+        daddi $s1, $s1, 1
         ; nop
         bnez $a1, max
 
