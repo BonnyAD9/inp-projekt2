@@ -57,24 +57,22 @@ smaller:
         bnez $a1, max
 
 max_end:
-        sb $a0, login($s1)
         daddi $s0, $s0, -3
         ; nop
         ; nop
-        beq $s0, $v0, main_end
+        beq $s0, $v0, main_end_store
 
 outer:
-        daddi $s2, $s0, 1
+        daddi $s3, $s0, 1
+        sb $a0, login($s1)
 
         lb $a0, login($s0)
+        lb $a1, login($s3)
 
-        lb $a1, login($s2)
+        daddi $s2, $s0, 2
         daddi $s1, $s0, 0
-        daddi $s0, $s0, -1
         sltu $t0, $a1, $a0
-        daddi $s2, $s2, 1
-        ; nop
-        ; nop
+        daddi $s0, $s0, -1
         lb $a2, login($s2)
         beqz $t0, insert_end
 
@@ -93,9 +91,10 @@ insert:
         lb $a2, login($s2)
         bnez $t0, insert
 insert_end:
-        sb $a0, login($s1)
-
         bne $s0, $v0, outer
+
+main_end_store:
+        sb $a0, login($s1)
 
 main_end:
         ; all sorted print result and exit
