@@ -25,6 +25,7 @@ main:
 
         ; Insert sort (improoved)
 
+        ; inicialization
         lb $a0, login($zero)
         daddi $s3, $zero, 1
         daddi $s1, $zero, 0
@@ -34,7 +35,9 @@ main:
         daddi $v1, $zero, 2
         daddi $v0, $zero, -1
         beqz $a1, main_end
+
 max:
+        ; move the max value to the end of the array
         slt $t0, $a1, $a0
         daddi $a2, $a1, 0
         daddi $s3, $s3, 1
@@ -42,7 +45,6 @@ max:
         bnez $t0, less
         daddi $a2, $a0, 0
         daddi $a0, $a1, 0
-
 less:
         lb $a1, login($s3)
         sb $a2, login($s1)
@@ -50,10 +52,12 @@ less:
         bnez $a1, max
 
 max_end:
+        ; prepare for the insert sort
         daddi $s0, $s3, -3
         beq $s3, $v1, main_end_store
 
 outer:
+        ; insert sort, but from the end (inserts max values at the end)
         daddi $s3, $s0, 1
         sb $a0, login($s1)
 
@@ -68,6 +72,9 @@ outer:
         beqz $t0, insert_end
 
 insert:
+        ; inner loop of the insert sort, because the max value is already at
+        ; the end, there is no need to check for out of bounds necause the loop
+        ; will end implicitly
         sb $a1, login($s1)
         daddi $s2, $s2, 1
         sltu $t0, $a2, $a0
