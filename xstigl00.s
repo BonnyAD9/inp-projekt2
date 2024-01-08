@@ -25,42 +25,33 @@ main:
 
         ; Insert sort (improoved)
 
-        daddi $v0, $zero, -1
-        daddi $s0, $zero, 1
-        daddi $s1, $zero, 0
         lb $a0, login($zero)
-        ; nop
-        ; nop
+        daddi $s3, $zero, 1
+        daddi $s1, $zero, 0
         beqz $a0, main_end
 
-        lb $a1, login($s0)
-        ; nop
-        ; nop
+        lb $a1, login($s3)
+        daddi $v1, $zero, 2
+        daddi $v0, $zero, -1
         beqz $a1, main_end
 max:
         slt $t0, $a1, $a0
-        daddi $s0, $s0, 1
-        ; nop
-        bnez $t0, smaller
-        sb $a0, login($s1)
+        daddi $a2, $a1, 0
+        daddi $s3, $s3, 1
+
+        bnez $t0, less
+        daddi $a2, $a0, 0
         daddi $a0, $a1, 0
-        lb $a1, login($s0)
+
+less:
+        lb $a1, login($s3)
+        sb $a2, login($s1)
         daddi $s1, $s1, 1
-        ; nop
-        bnez $a1, max
-        j max_end
-smaller:
-        sb $a1, login($s1)
-        lb $a1, login($s0)
-        daddi $s1, $s1, 1
-        ; nop
         bnez $a1, max
 
 max_end:
-        daddi $s0, $s0, -3
-        ; nop
-        ; nop
-        beq $s0, $v0, main_end_store
+        daddi $s0, $s3, -3
+        beq $s3, $v1, main_end_store
 
 outer:
         daddi $s3, $s0, 1
