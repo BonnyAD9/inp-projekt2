@@ -25,6 +25,7 @@ main:
 
         ; Insert sort (improoved)
 
+        daddi $v0, $zero, -1
         daddi $s0, $zero, 1
         daddi $s1, $zero, 0
         lb $a0, login($zero)
@@ -57,21 +58,19 @@ smaller:
 
 max_end:
         sb $a0, login($s1)
-        daddi $s0, $s0, -2
+        daddi $s0, $s0, -3
         ; nop
         ; nop
-        beqz $s0, main_end
+        beq $s0, $v0, main_end
 
 outer:
-        daddi $s0, $s0, -1
-        ; nop
-        ; nop
-        lb $a0, login($s0)
-
         daddi $s1, $s0, 0
         daddi $s2, $s0, 1
-        ; nop
-        ; nop
+
+        lb $a0, login($s0)
+
+        daddi $s0, $s0, -1
+
         lb $a1, login($s2)
         sltu $t0, $a1, $a0
         daddi $s2, $s2, 1
@@ -95,7 +94,7 @@ insert:
 insert_end:
         sb $a0, login($s1)
 
-        bnez $s0, outer
+        bne $s0, $v0, outer
 
 main_end:
         ; all sorted print result and exit
